@@ -23,7 +23,7 @@ jobs:
         flutter-version: '3.19.x'
         channel: 'stable'
 
-    - name: Generate Native Android Project Files & Set Target SDK
+    - name: Generate Native Android Project Files & Set Target SDK & Internet Permission
       run: |
         flutter create --org com.biplobadalat.app --project-name biplob_adalat temp_project
         cp -r temp_project/android ./android
@@ -32,6 +32,9 @@ jobs:
         # Configure minSdkVersion 21 & targetSdkVersion 36 in build.gradle
         sed -i 's/minSdkVersion .*/minSdkVersion 21/' android/app/build.gradle
         sed -i 's/targetSdkVersion .*/targetSdkVersion 36/' android/app/build.gradle
+        
+        # Add Internet Permission to AndroidManifest.xml automatically
+        sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET"\/>' android/app/src/main/AndroidManifest.xml
 
     - name: Install Dependencies
       run: flutter pub get
