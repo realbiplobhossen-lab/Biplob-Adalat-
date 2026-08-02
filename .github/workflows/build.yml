@@ -25,7 +25,7 @@ jobs:
 
     - name: Generate Native Android Project Files & Set Target SDK
       run: |
-        flutter create --org com.biplobadalat.app --app-name biplob_adalat temp_project
+        flutter create --org com.biplobadalat.app --project-name biplob_adalat temp_project
         cp -r temp_project/android ./android
         rm -rf temp_project
         
