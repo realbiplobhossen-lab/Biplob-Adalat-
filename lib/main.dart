@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 void main() {
-  runApp(const CourtFinderApp());
+  runApp(const BiplobAdalatApp());
 }
 
-class CourtFinderApp extends StatelessWidget {
-  const CourtFinderApp({super.key});
+class BiplobAdalatApp extends StatelessWidget {
+  const BiplobAdalatApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Court Finder AI',
+      title: 'Biplob Adalat',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -48,11 +49,11 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         elevation: 0,
         backgroundColor: const Color(0xFF0A192F),
         title: Text(
-          'কোর্ট ফাইন্ডার ও লিগ্যাল এইড',
+          'Biplob Adalat',
           style: GoogleFonts.tiroBangla(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 20,
+            fontSize: 22,
           ),
         ),
         centerTitle: true,
@@ -397,18 +398,57 @@ class GeminiAIScreen extends StatefulWidget {
 class _GeminiAIScreenState extends State<GeminiAIScreen> {
   final TextEditingController _promptController = TextEditingController();
   final List<Map<String, String>> _messages = [];
+  bool _isLoading = false;
 
-  void _sendMessage() {
-    if (_promptController.text.trim().isEmpty) return;
+  // Safe Integration using environment variables
+  static const String _apiKey = String.fromEnvironment('GEMINI_API_KEY');
+
+  late final GenerativeModel _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _model = GenerativeModel(
+      model: 'gemini-1.5-flash',
+      apiKey: _apiKey,
+    );
+  }
+
+  Future<void> _sendMessage() async {
+    final text = _promptController.text.trim();
+    if (text.isEmpty || _isLoading) return;
 
     setState(() {
-      _messages.add({"role": "user", "text": _promptController.text});
-      _messages.add({
-        "role": "ai",
-        "text": "Gemini AI: আপনার আইনি ও কোর্ট সংক্রান্ত প্রশ্নের উত্তর প্রস্তুত করা হচ্ছে... (API Key কনফিগার করার পর এটি সরাসরি উত্তর দেবে।)"
-      });
+      _messages.add({"role": "user", "text": text});
+      _isLoading = true;
       _promptController.clear();
     });
+
+    try {
+      final response = await _model.generateContent([
+        Content.text(
+          'তুমি বিপ্লব আদালত (Biplob Adalat) অ্যাপের একজন পেশাদার বাংলা আইনি সহকারী। সংক্ষেপে ও নির্ভুলভাবে উত্তর দাও: $text',
+        )
+      ]);
+
+      setState(() {
+        _messages.add({
+          "role": "ai",
+          "text": response.text ?? "দুঃখিত, কোনো উত্তর পাওয়া যায়নি।"
+        });
+      });
+    } catch (e) {
+      setState(() {
+        _messages.add({
+          "role": "ai",
+          "text": "ত্রুটি ঘটেছে: উত্তর পেতে সমস্যা হচ্ছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।"
+        });
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -451,6 +491,11 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
               },
             ),
           ),
+          if (_isLoading)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: LinearProgressIndicator(color: Color(0xFFD4AF37)),
+            ),
           Container(
             padding: const EdgeInsets.all(12),
             color: Colors.white,
@@ -459,6 +504,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
                 Expanded(
                   child: TextField(
                     controller: _promptController,
+                    onSubmitted: (_) => _sendMessage(),
                     decoration: const InputDecoration(
                       hintText: 'আইন বা কোর্ট বিষয়ক যেকোনো প্রশ্ন লিখুন...',
                       border: InputBorder.none,
@@ -477,4 +523,3 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
     );
   }
 }
-
