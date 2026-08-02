@@ -23,6 +23,13 @@ jobs:
         flutter-version: '3.19.x'
         channel: 'stable'
 
+    - name: Generate Native Android Project Files
+      run: |
+        # অস্থায়ী প্রজেক্ট তৈরি করে ফাইল কপি করা
+        flutter create --org com.courtfinder.app temp_project
+        cp -r temp_project/android ./android
+        rm -rf temp_project
+
     - name: Install Dependencies
       run: flutter pub get
 
