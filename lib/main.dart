@@ -42,6 +42,7 @@ class MainHomeScreen extends StatefulWidget {
 class _MainHomeScreenState extends State<MainHomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
+  @style
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -418,6 +419,18 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
     final text = _promptController.text.trim();
     if (text.isEmpty || _isLoading) return;
 
+    if (_apiKey.isEmpty) {
+      setState(() {
+        _messages.add({"role": "user", "text": text});
+        _messages.add({
+          "role": "ai",
+          "text": "ত্রুটি ঘটেছে: Gemini API Key পাওয়া যায়নি। অনুগ্রহ করে GitHub Secrets-এ GEMINI_API_KEY সঠিকভাবে সেটিং করার পর নতুন করে বিল্ড দিন।"
+        });
+        _promptController.clear();
+      });
+      return;
+    }
+
     setState(() {
       _messages.add({"role": "user", "text": text});
       _isLoading = true;
@@ -441,7 +454,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
       setState(() {
         _messages.add({
           "role": "ai",
-          "text": "ত্রুটি ঘটেছে: উত্তর পেতে সমস্যা হচ্ছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।"
+          "text": "ত্রুটি ঘটেছে: $e"
         });
       });
     } finally {
