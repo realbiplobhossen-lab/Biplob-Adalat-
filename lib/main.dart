@@ -42,7 +42,6 @@ class MainHomeScreen extends StatefulWidget {
 class _MainHomeScreenState extends State<MainHomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  @style
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -424,7 +423,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
         _messages.add({"role": "user", "text": text});
         _messages.add({
           "role": "ai",
-          "text": "ত্রুটি ঘটেছে: Gemini API Key পাওয়া যায়নি। অনুগ্রহ করে GitHub Secrets-এ GEMINI_API_KEY সঠিকভাবে সেটিং করার পর নতুন করে বিল্ড দিন।"
+          "text": "ত্রুটি ঘটেছে: Gemini API Key পাওয়া যায়নি। অনুগ্রহ করে GitHub Secrets-এ GEMINI_API_KEY সঠিকভাবে সেট করার পর বিল্ড দিন।"
         });
         _promptController.clear();
       });
