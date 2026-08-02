@@ -1,5 +1,5 @@
-name: court_finder
-description: A premier app for finding court locations and legal AI assistance.
+name: biplob_adalat
+description: Biplob Adalat - Court location finder and legal AI assistant.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.6
   google_fonts: ^6.1.0
-  google_generative_ai: ^0.2.2 # Gemini AI integration
+  google_generative_ai: ^0.2.2
 
 dev_dependencies:
   flutter_test:
