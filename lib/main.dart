@@ -409,10 +409,11 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
   void initState() {
     super.initState();
     _model = GenerativeModel(
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash', // 'gemini-1.5-flash' এর পরিবর্তে এটি দিন
       apiKey: _apiKey,
     );
   }
+  
 
   Future<void> _sendMessage() async {
     final text = _promptController.text.trim();
