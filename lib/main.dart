@@ -149,19 +149,13 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                   ),
                   _buildMainCategoryCard(
                     title: 'মহানগর দায়রা জজ আদালত',
-                    subtitle: 'মহানগর জজ ও মানব পাচার প্রতিরোধ ট্রাইব্যুনাল',
+                    subtitle: 'ভবন ও টিন শেড-এর ফ্লোর ভিত্তিক সকল কোর্ট',
                     icon: Icons.gavel_rounded,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const SubCategoryScreen(
-                            title: 'মহানগর দায়রা জজ আদালত',
-                            items: [
-                              'মহানগর দায়রা জজ আদালত',
-                              'মানব পাচার ও অতিরিক্ত মহানগর (টিনশেড নিচতলা)',
-                            ],
-                          ),
+                          builder: (context) => const MetropolitanSessionsCourtScreen(),
                         ),
                       );
                     },
@@ -334,6 +328,342 @@ class SubCategoryScreen extends StatelessWidget {
   }
 }
 
+// ------------------- METROPOLITAN SESSIONS COURT SCREEN -------------------
+
+class MetropolitanSessionsCourtScreen extends StatefulWidget {
+  const MetropolitanSessionsCourtScreen({super.key});
+
+  @override
+  State<MetropolitanSessionsCourtScreen> createState() =>
+      _MetropolitanSessionsCourtScreenState();
+}
+
+class _MetropolitanSessionsCourtScreenState
+    extends State<MetropolitanSessionsCourtScreen> {
+  String selectedFloor = 'সব ফ্লোর';
+
+  final List<String> floorList = [
+    'সব ফ্লোর',
+    '৬ষ্ঠ তলা',
+    '৫ম তলা',
+    '৪র্থ তলা',
+    '৩য় তলা',
+    '২য় তলা',
+    'নীচ তলা',
+    'টিন শেড',
+  ];
+
+  final List<Map<String, dynamic>> courtData = [
+    // ৬ষ্ঠ তলা
+    {'floor': '৬ষ্ঠ তলা', 'title': 'বিশেষ জজ আদালত নং- ১, ঢাকা।'},
+    {'floor': '৬ষ্ঠ তলা', 'title': 'বিশেষ জজ আদালত নং- ২, ঢাকা।'},
+    {'floor': '৬ষ্ঠ তলা', 'title': 'বিশেষ জজ আদালত নং- ৩, ঢাকা।'},
+    {'floor': '৬ষ্ঠ তলা', 'title': 'বিশেষ জজ আদালত নং- ৪, ঢাকা।'},
+
+    // ৫ম তলা
+    {'floor': '৫ম তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল নং- ৫, ঢাকা।'},
+    {'floor': '৫ম তলা', 'title': 'বিশেষ জজ আদালত নং- ৫, ঢাকা।'},
+    {'floor': '৫ম তলা', 'title': 'দ্রুত বিচার ট্রাইব্যুনাল নং- ৩, ঢাকা।'},
+    {
+      'floor': '৫ম তলা',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ৮মে আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১৬, ঢাকা'
+    },
+    {'floor': '৫ম তলা', 'title': 'পরিবেশ আপীল আদালত, ঢাকা।'},
+
+    // ৪র্থ তলা
+    {
+      'floor': '৪র্থ তলা',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ৫মে আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ৬, ঢাকা'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ৭ম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১৫, ঢাকা'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'title': 'যুগ্ম মহানগর দায়রা জজ ১ম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১১, ঢাকা'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ৬ষ্ঠ আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১৪, ঢাকা'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'title': 'যুগ্ম মহানগর দায়রা জজ ৫ম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১০, ঢাকা'
+    },
+
+    // ৩য় তলা
+    {'floor': '৩য় তলা', 'title': 'বিভাগীয় স্পেশাল জজ আদালত, ঢাকা।'},
+    {'floor': '৩য় তলা', 'title': 'দ্রুত বিচার ট্রাইব্যুনাল নং- ১, ঢাকা।'},
+    {'floor': '৩য় তলা', 'title': 'অনুলিপি শাখা, মহানগর দায়রা জজ আদালত, ঢাকা।'},
+    {
+      'floor': '৩য় তলা',
+      'title': 'যুগ্ম মহানগর দায়রা জজ ৪র্থ আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ৯, ঢাকা'
+    },
+    {'floor': '৩য় তলা', 'title': 'দ্রুত বিচার ট্রাইব্যুনাল নং- ২, ঢাকা।'},
+
+    // ২য় তলা
+    {
+      'floor': '২য় তলা',
+      'title': 'মহানগর দায়রা জজ আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১, ঢাকা'
+    },
+    {
+      'floor': '২য় তলা',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ১ম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ২, ঢাকা'
+    },
+    {'floor': '২য় তলা', 'title': 'নেজারত ও সেরেস্তা এবং প্রশাসনিক কর্মকর্তা মহানগর দায়রা জজ।'},
+    {
+      'floor': '২য় তলা',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ৪র্থ আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ৫, ঢাকা'
+    },
+    {
+      'floor': '২য় তলা',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ৩য় আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ৪, ঢাকা'
+    },
+    {
+      'floor': '২য় তলা',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ২য় আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ৩, ঢাকা'
+    },
+
+    // নীচ তলা
+    {
+      'floor': 'নীচ তলা',
+      'title': 'যুগ্ম মহানগর দায়রা জজ ২য় আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ৭, ঢাকা'
+    },
+    {
+      'floor': 'নীচ তলা',
+      'title': 'যুগ্ম মহানগর দায়রা জজ ৬ষ্ঠ আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১২, ঢাকা'
+    },
+    {
+      'floor': 'নীচ তলা',
+      'title': 'যুগ্ম মহানগর দায়রা জজ ৩য় আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ৮, ঢাকা'
+    },
+    {
+      'floor': 'নীচ তলা',
+      'title': 'যুগ্ম মহানগর দায়রা জজ ৭ম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১৩, ঢাকা'
+    },
+
+    // টিন শেড
+    {'floor': 'টিন শেড', 'title': 'মানব পাচার ট্রাইব্যুনাল, ঢাকা।'},
+    {'floor': 'টিন শেড', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল নং- ৯, ঢাকা।'},
+    {
+      'floor': 'টিন শেড',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ৯ম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১৭, ঢাকা'
+    },
+    {
+      'floor': 'টিন শেড',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ১০ম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১৮, ঢাকা'
+    },
+    {
+      'floor': 'টিন শেড',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ১১ তম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ১৯, ঢাকা'
+    },
+    {
+      'floor': 'টিন শেড',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ১২ তম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ২০, ঢাকা'
+    },
+    {
+      'floor': 'টিন শেড',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ১৩তম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ২১, ঢাকা'
+    },
+    {
+      'floor': 'টিন শেড',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ১৪ তম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ২২, ঢাকা'
+    },
+    {
+      'floor': 'টিন শেড',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ১৫ তম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ২৩, ঢাকা'
+    },
+    {
+      'floor': 'টিন শেড',
+      'title': 'অতিরিক্ত মহানগর দায়রা জজ ১৬ তম আদালত, ঢাকা',
+      'sub': 'মেট্রো বিশেষ ট্রাইব্যুনাল নং- ২৪, ঢাকা'
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    List<Map<String, dynamic>> filteredCourts = selectedFloor == 'সব ফ্লোর'
+        ? courtData
+        : courtData.where((item) => item['floor'] == selectedFloor).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'মহানগর দায়রা জজ আদালত',
+          style: GoogleFonts.tiroBangla(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF0A192F),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Column(
+        children: [
+          // Filter Chips Scrollable Bar
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                )
+              ],
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: floorList.map((floor) {
+                  final isSelected = selectedFloor == floor;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: ChoiceChip(
+                      label: Text(
+                        floor,
+                        style: GoogleFonts.tiroBangla(
+                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                      selected: isSelected,
+                      selectedColor: const Color(0xFFD4AF37),
+                      backgroundColor: const Color(0xFFF4F6F9),
+                      onSelected: (bool selected) {
+                        setState(() {
+                          selectedFloor = floor;
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+
+           // Court Cards List
+          Expanded(
+            child: filteredCourts.isEmpty
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(14),
+                    itemCount: filteredCourts.length,
+                    itemBuilder: (context, index) {
+                      final court = filteredCourts[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade200),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            )
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Floor Indicator Tag
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: court['floor'] == 'টিন শেড'
+                                      ? Colors.orange.shade800
+                                      : const Color(0xFF0A192F),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  court['floor'],
+                                  style: GoogleFonts.tiroBangla(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              // Court Name Info
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      court['title'],
+                                      style: GoogleFonts.tiroBangla(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF0A192F),
+                                      ),
+                                    ),
+                                    if (court.containsKey('sub')) ...[
+                                      const SizedBox(height: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 3),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFD4AF37).withOpacity(0.15),
+                                          borderRadius: BorderRadius.circular(6),
+                                          border: Border.all(
+                                            color: const Color(0xFFD4AF37),
+                                            width: 0.5,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          court['sub'],
+                                          style: GoogleFonts.tiroBangla(
+                                            fontSize: 12,
+                                            color: const Color(0xFF0A192F),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ------------------- DETAILS SCREEN (FLOOR INFO) -------------------
 
 class CourtDetailsScreen extends StatelessWidget {
@@ -374,7 +704,7 @@ class CourtDetailsScreen extends StatelessWidget {
                 border: Border.all(color: Colors.grey.shade300),
               ),
               child: const Text(
-                'এই বিল্ডিংয়ের রুম এবং তলা সংক্রান্ত বিস্তারিত ডাটা শীঘ্রই যুক্ত করা হবে। আপনি আপনার কাছে থাকা PDF ফাইলটি প্রদান করলে তা এখানে ডাইনামিকালি সাজিয়ে দেওয়া হবে।',
+                'এই বিল্ডিংয়ের রুম এবং তলা সংক্রান্ত বিস্তারিত ডাটা শীঘ্রই যুক্ত করা হবে। আপনি আপনার কাছে থাকা তথ্য প্রদান করলে তা এখানে ডাইনামিকালি সাজিয়ে দেওয়া হবে।',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
               ),
@@ -409,11 +739,10 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
   void initState() {
     super.initState();
     _model = GenerativeModel(
-      model: 'gemini-2.0-flash', // 'gemini-1.5-flash' এর পরিবর্তে এটি দিন
+      model: 'gemini-2.0-flash',
       apiKey: _apiKey,
     );
   }
-  
 
   Future<void> _sendMessage() async {
     final text = _promptController.text.trim();
