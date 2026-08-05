@@ -128,21 +128,27 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               child: Column(
                 children: [
                   _buildMainCategoryCard(
-                    title: 'ম্যাজিস্ট্রেট কোর্ট',
-                    subtitle: 'CMM, CJM ও নির্বাহী ম্যাজিস্ট্রেট কোর্ট',
+                    title: 'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM)',
+                    subtitle: 'CMM ভবনের ২য় থেকে ৯মন তলার কোর্ট ও শাখা সূচী',
+                    icon: Icons.gavel,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CMMCourtScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildMainCategoryCard(
+                    title: 'চিফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত (CJM)',
+                    subtitle: 'CJM ভবনের ২য় থেকে ৯মন তলার ফ্লোর নির্দেশিকা',
                     icon: Icons.account_balance,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const SubCategoryScreen(
-                            title: 'ম্যাজিস্ট্রেট কোর্ট',
-                            items: [
-                              'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM)',
-                              'চিফ জুডিশিয়াল ম্যাজিস্ট্রেট কোর্ট (CJM)',
-                              'নির্বাহী ম্যাজিস্ট্রেট কোর্ট',
-                            ],
-                          ),
+                          builder: (context) => const CJMCourtScreen(),
                         ),
                       );
                     },
@@ -268,6 +274,821 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   }
 }
 
+// ------------------- CMM COURT SCREEN (PDF DIRECTORY) -------------------
+
+class CMMCourtScreen extends StatefulWidget {
+  const CMMCourtScreen({super.key});
+
+  @override
+  State<CMMCourtScreen> createState() => _CMMCourtScreenState();
+}
+
+class _CMMCourtScreenState extends State<CMMCourtScreen> {
+  String selectedFloor = 'সব ফ্লোর';
+
+  final List<String> floorList = [
+    'সব ফ্লোর',
+    '২য় তলা',
+    '৩য় তলা',
+    '৪র্থ তলা',
+    '৫ম তলা',
+    '৬ষ্ঠ তলা',
+    '৭ম তলা',
+    '৮ম তলা',
+    '৯ম তলা',
+  ];
+
+  final List<Map<String, dynamic>> cmmData = [
+    // ২য় তলা
+    {
+      'floor': '২য় তলা',
+      'title': 'জি. আর শাখা এবং কোর্ট নং-২৭, ২৮',
+      'sub': 'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM), ঢাকা[span_1](start_span)[span_1](end_span)'
+    },
+    {
+      'floor': '২য় তলা',
+      'title': 'জিআর শাখা (GR Section)',
+      'sub': 'ঢাকা মেট্রোপলিটন পুলিশ (DMP)[span_2](start_span)[span_2](end_span)'
+    },
+    {
+      'floor': '২য় তলা',
+      'title': 'নারী ও শিশু জি. আর শাখা',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_3](start_span)[span_3](end_span)'
+    },
+    {
+      'floor': '২য় তলা',
+      'title': 'পি.আর শাখা',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_4](start_span)[span_4](end_span)'
+    },
+    {
+      'floor': '২য় তলা',
+      'title': 'অতিরিক্ত পুলিশ কমিশনারের কার্যালয়',
+      'sub': 'ঢাকা মেট্রোপলিটন পুলিশ[span_5](start_span)[span_5](end_span)'
+    },
+
+    // ৩য় তলা
+    {
+      'floor': '৩য় তলা',
+      'title': 'কোর্ট নং-০১, ০২ এবং নেজারত শাখা',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_6](start_span)[span_6](end_span)'
+    },
+
+    // ৪র্থ তলা
+    {
+      'floor': '৪র্থ তলা',
+      'title': 'কোর্ট নং-৩, ৪, ৫, ৬',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_7](start_span)[span_7](end_span)'
+    },
+
+    // ৫ম তলা
+    {
+      'floor': '৫ম তলা',
+      'title': 'কোর্ট নং-৭, ৮, ৯, ১০',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_8](start_span)[span_8](end_span)'
+    },
+
+    // ৬ষ্ঠ তলা
+    {
+      'floor': '৬ষ্ঠ তলা',
+      'title': 'কোর্ট নং-১১, ১২, ১৩, ১৪',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_9](start_span)[span_9](end_span)'
+    },
+
+    // ৭ম তলা
+    {
+      'floor': '৭ম তলা',
+      'title': 'কোর্ট নং-১৫, ১৬, ১৭, ১৮',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_10](start_span)[span_10](end_span)'
+    },
+
+    // ৮ম তলা
+    {
+      'floor': '৮ম তলা',
+      'title': 'কোর্ট নং-১৯, ২০, ২১, ২২',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_11](start_span)[span_11](end_span)'
+    },
+
+    // ৯মে তলা
+    {
+      'floor': '৯ম তলা',
+      'title': 'কোর্ট নং-২৩, ২৪, ২৫, ২৬',
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_12](start_span)[span_12](end_span)'
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    List<Map<String, dynamic>> filteredCourts = selectedFloor == 'সব ফ্লোর'
+        ? cmmData
+        : cmmData.where((item) => item['floor'] == selectedFloor).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM)',
+          style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 17),
+        ),
+        backgroundColor: const Color(0xFF0A192F),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Column(
+        children: [
+          // Filter Chips Scrollable Bar
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                )
+              ],
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: floorList.map((floor) {
+                  final isSelected = selectedFloor == floor;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: ChoiceChip(
+                      label: Text(
+                        floor,
+                        style: GoogleFonts.tiroBangla(
+                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                      selected: isSelected,
+                      selectedColor: const Color(0xFFD4AF37),
+                      backgroundColor: const Color(0xFFF4F6F9),
+                      onSelected: (bool selected) {
+                        setState(() {
+                          selectedFloor = floor;
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+
+          // Court List
+          Expanded(
+            child: filteredCourts.isEmpty
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(14),
+                    itemCount: filteredCourts.length,
+                    itemBuilder: (context, index) {
+                      final court = filteredCourts[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade200),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            )
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0A192F),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  court['floor'],
+                                  style: GoogleFonts.tiroBangla(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      court['title'],
+                                      style: GoogleFonts.tiroBangla(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF0A192F),
+                                      ),
+                                    ),
+                                    if (court.containsKey('sub')) ...[
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        court['sub'],
+                                        style: GoogleFonts.tiroBangla(
+                                          fontSize: 12,
+                                          color: Colors.grey.shade800,
+                                          height: 1.4,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ------------------- CJM COURT SCREEN (PDF DIRECTORY) -------------------
+
+class CJMCourtScreen extends StatefulWidget {
+  const CJMCourtScreen({super.key});
+
+  @override
+  State<CJMCourtScreen> createState() => _CJMCourtScreenState();
+}
+
+class _CJMCourtScreenState extends State<CJMCourtScreen> {
+  String selectedFloor = 'সব ফ্লোর';
+
+  final List<String> floorList = [
+    'সব ফ্লোর',
+    '২য় তলা',
+    '৩য় তলা',
+    '৪র্থ তলা',
+    '৫ম তলা',
+    '৬ষ্ঠ তলা',
+    '৭ম তলা',
+    '৮ম তলা',
+    '৯ম তলা',
+  ];
+
+  final List<Map<String, dynamic>> cjmData = [
+    // ২য় তলা
+    {
+      'floor': '২য় তলা',
+      'room': 'কক্ষ ২০১',
+      'title': 'রেকর্ড শাখা',
+      'sub': 'রেকর্ড কর্মকর্তা: আব্দুল্লাহ-আল-মাহমুদ\nমোবাইল: ০১৬৮৫২১৬৬৮১, ০১৭৩৪২৯৯৯৫৫\nহেল্পলাইন: ০১৩৩৫-১৪৫০০১'
+    },
+    {
+      'floor': '২য় তলা',
+      'room': 'কক্ষ ২০২',
+      'title': 'প্রশাসনিক কর্মকর্তা শাখা',
+      'sub': 'প্রশাসনিক জামানত ও হাইকোর্ট বিভাগ সংক্রান্ত আপীল আদালত বিষয়ক শাখা।'
+    },
+    {
+      'floor': '২য় তলা',
+      'room': 'কক্ষ ২০৩',
+      'title': 'নেজারত শাখা',
+      'sub': 'নেজারত হেল্পলাইন: ০১৩৩৫-১৪৫০০১'
+    },
+    {
+      'floor': '২য় তলা',
+      'room': 'কক্ষ ২০৪',
+      'title': 'জুডিশিয়াল মুন্সীখানা অফিস',
+      'sub': 'হেল্পলাইন: ০১৩৩৫-১৪৫০০১'
+    },
+    {
+      'floor': '২য় তলা',
+      'room': 'হাজতখানা',
+      'title': 'CJM কোর্ট হাজতখানা',
+      'sub': 'বিশেষ নির্দেশিকা: বিনা অনুমতিতে প্রবেশ সম্পূর্ণ নিষেধ।'
+    },
+
+    // ৩য় তলা
+    {
+      'floor': '৩য় তলা',
+      'room': 'কক্ষ ৩০১',
+      'title': 'চীফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত',
+      'sub': 'প্রধান আদালত - চীফ জুডিশিয়াল ম্যাজিস্ট্রেট, ঢাকা।'
+    },
+    {
+      'floor': '৩য় তলা',
+      'room': 'কক্ষ ৩০২',
+      'title': 'অতিরিক্ত চীফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত',
+      'sub': 'অতিরিক্ত চীফ জুডিশিয়াল ম্যাজিস্ট্রেট, ঢাকা।'
+    },
+    {
+      'floor': '৩য় তলা',
+      'room': 'কক্ষ ৩০৩',
+      'title': 'সম্মেলন ও মিলনায়তন',
+      'sub': 'কনফারেন্স ও মিটিং রুম।'
+    },
+    {
+      'floor': '৩য় তলা',
+      'room': 'কক্ষ ৩০৪',
+      'title': 'স্টেনোগ্রাফার শাখা (CJM)',
+      'sub': 'চীফ জুডিশিয়াল ম্যাজিস্ট্রেট স্টেনোগ্রাফার কক্ষ।'
+    },
+    {
+      'floor': '৩য় তলা',
+      'room': 'কক্ষ ৩০৫',
+      'title': 'অতিথি কক্ষ (Guest Room)',
+      'sub': 'দর্শনার্থী ও অতিথি বিশ্রামাগার।'
+    },
+    {
+      'floor': '৩য় তলা',
+      'room': 'কক্ষ ৩০৬',
+      'title': 'হিসাব শাখা',
+      'sub': 'অর্থ শাখা - জেলা ও দায়রা জজ এবং সিজেএম আদালত, ঢাকা\nহেল্পলাইন: ০১৩৩৫-১৪৫০০১'
+    },
+    {
+      'floor': '৩য় তলা',
+      'room': 'কক্ষ ৩০৭',
+      'title': 'স্টেনোগ্রাফার (ACJM) ও শাখা',
+      'sub': 'অতিরিক্ত চীফ জুডিশিয়াল ম্যাজিস্ট্রেট শাখা ও স্টেনো কক্ষ।'
+    },
+    {
+      'floor': '৩য় তলা',
+      'room': 'কক্ষ ৩০৮',
+      'title': 'আদালত লাইব্রেরী',
+      'sub': 'আইন গ্রন্থ ও নথিপত্র পাঠাগার।'
+    },
+
+    // ৪র্থ তলা
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'মোহাম্মদপুর ও আদাবর থানা G.R.',
+      'sub': 'অপরাধ তথ্য ও প্রসিকিউশন বিভাগ, ডিএমপি।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'রামপুরা ও সবুজবাগ থানা G.R.',
+      'sub': 'অপরাধ তথ্য ও প্রসিকিউশন বিভাগ।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'কক্ষ ৪১১',
+      'title': 'মিরপুর, শেরেবাংলা নগর, শাহআলী ও দারুস-সালাম থানা G.R.',
+      'sub': 'জি.আর. সেকশন।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'কক্ষ ৪১২',
+      'title': 'বাড্ডা ও ভাটারা থানা G.R.',
+      'sub': 'জি.আর. সেকশন।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'কক্ষ ৪১৩',
+      'title': 'লালবাগ, চকবাজার, কামরাঙ্গীরচর, কোতোয়ালী ও বংশাল থানা G.R.',
+      'sub': 'জি.আর. শাখা ও প্রসিকিউশন বিভাগ।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'কক্ষ ৪০৬',
+      'title': 'মতিঝিল, পল্টন ও শাহজাহানপুর থানা G.R.',
+      'sub': 'জি.আর. শাখা, প্রসিকিউশন বিভাগ।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'রমনা ও শাহবাগ থানা G.R.',
+      'sub': 'প্যারাফ্যাসিলিটি পরামর্শ: ০১৬৪৭১৩০৩৩৯'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'মিরপুর, পল্লবী, রূপনগর, কাফরুল ও ভাসানটেক থানা G.R.',
+      'sub': 'প্যারাফ্যাসিলিটি পরামর্শ: ০১৬৪৭১৩০৩৩৯'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'নিউমার্কেট ও কলাবাগান থানা G.R.',
+      'sub': 'প্রসিকিউশন বিভাগ, ডিএমপি।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'খিলক্ষেত ও ক্যান্টনমেন্ট থানা G.R.',
+      'sub': 'প্রসিকিউশন বিভাগ, ডিএমপি।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'সূত্রাপুর, গণ্ডারিয়া ও ওয়ারী থানা G.R.',
+      'sub': 'প্রসিকিউশন বিভাগ, ডিএমপি।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'তেজগাঁও, তেজগাঁও শিল্পাঞ্চল ও হাতিরঝিল থানা G.R.',
+      'sub': 'জি.আর. শাখা ও প্রসিকিউশন।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'গুলশান ও বনানী থানা G.R.',
+      'sub': 'জি.আর. শাখা।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'কদমতলী ও শ্যামপুর থানা G.R.',
+      'sub': 'জি.আর. শাখা।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'যাত্রাবাড়ী, ডেমরা, খিলগাঁও ও মুগদা থানা G.R.',
+      'sub': 'জি.আর. শাখা।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'বিমানবন্দর, উত্তরখান ও দক্ষিণখান থানা G.R.',
+      'sub': 'জি.আর. শাখা।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'ধানমণ্ডি ও হাজারীবাগ থানা G.R.',
+      'sub': 'জি.আর. শাখা।'
+    },
+    {
+      'floor': '৪র্থ তলা',
+      'room': 'শাখা রিসিভ',
+      'title': 'রিসিভ ও ডিসপ্যাচ শাখা',
+      'sub': 'ডিএমপি, ঢাকা শাখা রিসিভ-ডিসপ্যাচ।'
+    },
+
+    // ৫ম তলা
+    {
+      'floor': '৫ম তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'উপজেলা জি.আর. শাখাসমূহ',
+      'sub': 'দোহার, নবাবগঞ্জ, ধামরাই, আশুলিয়া ও সাভার থানা।'
+    },
+    {
+      'floor': '৫ম তলা',
+      'room': 'জি.আর. শাখা',
+      'title': 'কেরানীগঞ্জ ও দক্ষিণ কেরানীগঞ্জ থানা',
+      'sub': 'জি.আর. শাখা।'
+    },
+    {
+      'floor': '৫ম তলা',
+      'room': 'নন-জি.আর. শাখা',
+      'title': 'নন-জি.আর. মামলা শাখা',
+      'sub': 'সাভার, আশুলিয়া, ধামরাই ও রেলওয়ে থানা।'
+    },
+    {
+      'floor': '৫ম তলা',
+      'room': 'আদালত ২৯',
+      'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট',
+      'sub': 'বিচারের দায়িত্বে: আলবীরুনী মীর।'
+    },
+    {
+      'floor': '৫ম তলা',
+      'room': 'লিগ্যাল এইড',
+      'title': 'জেলা লিগ্যাল এইড অফিসারের কার্যালয়',
+      'sub': 'বিনামূল্যে সরকারি আইনি সহায়তা কেন্দ্র।'
+    },
+    {
+      'floor': '৫ম তলা',
+      'room': 'রেকর্ড রুম',
+      'title': 'পুলিশ রেকর্ড রুম (সিডি শাখা)',
+      'sub': 'গোপনীয় শাখা / কেস ডায়েরি (CD) শাখা।'
+    },
+    {
+      'floor': '৫ম তলা',
+      'room': 'মাদক সেকশন',
+      'title': 'মাদকদ্রব্য নিয়ন্ত্রণ প্রসিকিউশন সেকশন',
+      'sub': 'ঢাকা মেট্রো (উত্তর), ঢাকা মেট্রো (দক্ষিণ) ও ঢাকা জেলা কার্যালয়।'
+    },
+    {
+      'floor': '৫ম তলা',
+      'room': 'ডিজিটাল রুম',
+      'title': 'ডিজিটাল ডাটা ম্যানেজমেন্ট রুম',
+      'sub': 'কোঅর্ডিনেশন ও তথ্য ব্যবস্থাপনা রুম (কোর্ট পুলিশ, ঢাকা জেলা)।'
+    },
+
+    // ৬ষ্ঠ তলা
+    {
+      'floor': '৬ষ্ঠ তলা',
+      'room': 'কক্ষ ৬০১',
+      'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-৩, ঢাকা কোর্ট',
+      'sub': 'সংশ্লিষ্ট স্টেনো টাইপিস্ট: কক্ষ নং-৬০৫'
+    },
+    {
+      'floor': '৬ষ্ঠ তলা',
+      'room': 'কক্ষ ৬০২',
+      'title': 'সিনিয়র জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-১, ঢাকা কোর্ট',
+      'sub': 'সংশ্লিষ্ট স্টেনো টাইপিস্ট: কক্ষ নং-৬০৬'
+    },
+    {
+      'floor': '৬ষ্ঠ তলা',
+      'room': 'কক্ষ ৬০৩',
+      'title': 'সিনিয়র জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-২, ঢাকা কোর্ট',
+      'sub': 'সংশ্লিষ্ট স্টেনো টাইপিস্ট: কক্ষ নং-৬০৭'
+    },
+    {
+      'floor': '৬ষ্ঠ তলা',
+      'room': 'কক্ষ ৬০৪',
+      'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-২, ঢাকা কোর্ট',
+      'sub': 'সংশ্লিষ্ট স্টেনো টাইপিস্ট: কক্ষ নং-৬০৮'
+    },
+
+    // ৭ম তলা
+    {
+      'floor': '৭ম তলা',
+      'room': 'কক্ষ ৭০১',
+      'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-৫, ঢাকা কোর্ট',
+      'sub': 'সংশ্লিষ্ট স্টেনো টাইপিস্ট: কক্ষ নং-৭০৫'
+    },
+    {
+      'floor': '৭ম তলা',
+      'room': 'কক্ষ ৭০২',
+      'title': 'সিনিয়র জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-৩, ঢাকা কোর্ট',
+      'sub': 'সংশ্লিষ্ট স্টেনো টাইপিস্ট: কক্ষ নং-৭০৬'
+    },
+    {
+      'floor': '৭ম তলা',
+      'room': 'কক্ষ ৭০৩',
+      'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-১, ঢাকা কোর্ট',
+      'sub': 'সংশ্লিষ্ট স্টেনো টাইপিস্ট: কক্ষ নং-৭০৭'
+    },
+    {
+      'floor': '৭ম তলা',
+      'room': 'কক্ষ ৭০৪',
+      'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-৪, ঢাকা কোর্ট',
+      'sub': 'সংশ্লিষ্ট স্টেনো টাইপিস্ট: কক্ষ নং-৭০৮'
+    },
+    {
+      'floor': '৭ম তলা',
+      'room': 'কক্ষ ৭০০',
+      'title': 'ফর্মস এন্ড স্টেশনারী শাখা',
+      'sub': 'সরকারি ফর্ম ও প্রয়োজনীয় স্টেশনারী সরবরাহ শাখা।'
+    },
+
+    // ৮ম তলা
+    {
+      'floor': '৮ম তলা',
+      'room': 'আদালত ৩০',
+      'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট আদালত নং-৩০',
+      'sub': 'বিচারক: মোঃ ছিদ্দিক আজাদ (এজলাস)'
+    },
+    {
+      'floor': '৮ম তলা',
+      'room': 'ট্রাইব্যুনাল',
+      'title': 'সন্ত্রাস বিরোধী বিশেষ ট্রাইব্যুনাল, ঢাকা',
+      'sub': 'Anti-Terrorism Special Tribunal, Dhaka (এজলাস ও অফিস)'
+    },
+    {
+      'floor': '৮ম তলা',
+      'room': 'আদালত ৩৬',
+      'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট আদালত নং-৩৬',
+      'sub': 'বিচারকের খাসকামরা ও এজলাস।'
+    },
+    {
+      'floor': '৮ম তলা',
+      'room': 'আপীল আদালত',
+      'title': 'পারিবারিক আপিল আদালত নং-১, ঢাকা',
+      'sub': 'পারিবারিক বিরোধ আপীল শুনানি আদালত।'
+    },
+    {
+      'floor': '৮ম তলা',
+      'room': 'বিশেষ আদালত',
+      'title': 'স্পেশাল জেলা জজ ও স্পেশাল দায়রা জজ',
+      'sub': 'বিশেষ জজ আদালত, ঢাকা।'
+    },
+    {
+      'floor': '৮ম তলা',
+      'room': 'কক্ষ ৬০',
+      'title': '৩১নং আদালতের সেরেস্তা',
+      'sub': '৩১ নম্বর আদালতের সেরেস্তা শাখা।'
+    },
+
+    // ৯মে তলা
+    {
+      'floor': '৯ম তলা',
+      'room': 'আদালত ৩৩',
+      'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট আদালত নং-৩৩',
+      'sub': 'বিচারক: মহদেী হাসান (বিচারকের খাসকামরা ও এজলাস)।'
+    },
+    {
+      'floor': '৯ম তলা',
+      'room': 'আদালত ৩৪',
+      'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট ও দ্রুত বিচার আদালত (নং-০৭)',
+      'sub': 'বিচারক: মোঃ আশরাফুল হক, সিএমএম কোর্ট, ঢাকা।'
+    },
+    {
+      'floor': '৯ম তলা',
+      'room': 'আদালত ৩৫',
+      'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট আদালত নং-৩৫',
+      'sub': 'বিচারক: মোঃ রকিবুল হাসান।'
+    },
+    {
+      'floor': '৯ম তলা',
+      'room': 'সেরেস্তা',
+      'title': '৩২নং ও ৩৭নং আদালতের সেরেস্তা',
+      'sub': '৩২ নম্বর কোর্ট সেরেস্তা ও ৩৭ নম্বর কোর্টের সেরেস্তা শাখা।'
+    },
+    {
+      'floor': '৯ম তলা',
+      'room': 'কোর্ট ৩৩/০৬',
+      'title': 'দ্রুত বিচার আদালত নং-০৬',
+      'sub': 'স্পেশাল জেলা জজ ও স্পেশাল দায়রা জজ আদালত সংলগ্ন।'
+    },
+    {
+      'floor': '৯ম তলা',
+      'room': 'আপীল আদালত-৪',
+      'title': 'পারিবারিক আপিল আদালত নং-০৪, ঢাকা',
+      'sub': 'বর্তমানে: জেলা ও দায়রা জজ এর কার্যালয়, ঢাকা।\nপাবলিক প্রসিকিউশন/পিপি: রুবিনা আক্তার রুবা (০১৭১১২২৪৪০৬)'
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    List<Map<String, dynamic>> filteredCourts = selectedFloor == 'সব ফ্লোর'
+        ? cjmData
+        : cjmData.where((item) => item['floor'] == selectedFloor).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'চিফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত (CJM)',
+          style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 18),
+        ),
+        backgroundColor: const Color(0xFF0A192F),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Column(
+        children: [
+          // Filter Chips Scrollable Bar
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                )
+              ],
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: floorList.map((floor) {
+                  final isSelected = selectedFloor == floor;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: ChoiceChip(
+                      label: Text(
+                        floor,
+                        style: GoogleFonts.tiroBangla(
+                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                      selected: isSelected,
+                      selectedColor: const Color(0xFFD4AF37),
+                      backgroundColor: const Color(0xFFF4F6F9),
+                      onSelected: (bool selected) {
+                        setState(() {
+                          selectedFloor = floor;
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+
+          // Court List
+          Expanded(
+            child: filteredCourts.isEmpty
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(14),
+                    itemCount: filteredCourts.length,
+                    itemBuilder: (context, index) {
+                      final court = filteredCourts[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade200),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            )
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF0A192F),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      court['floor'],
+                                      style: GoogleFonts.tiroBangla(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  if (court.containsKey('room')) ...[
+                                    const SizedBox(height: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFD4AF37).withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        court['room'],
+                                        style: GoogleFonts.tiroBangla(
+                                          color: const Color(0xFF0A192F),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      court['title'],
+                                      style: GoogleFonts.tiroBangla(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF0A192F),
+                                      ),
+                                    ),
+                                    if (court.containsKey('sub')) ...[
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        court['sub'],
+                                        style: GoogleFonts.tiroBangla(
+                                          fontSize: 12,
+                                          color: Colors.grey.shade800,
+                                          height: 1.4,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ------------------- SUB CATEGORY SCREEN -------------------
 
 class SubCategoryScreen extends StatelessWidget {
@@ -292,7 +1113,6 @@ class SubCategoryScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         itemCount: items.length,
         itemBuilder: (context, index) {
-          final item = items[index];
           return Card(
             elevation: 2,
             margin: const EdgeInsets.only(bottom: 12),
@@ -304,372 +1124,26 @@ class SubCategoryScreen extends StatelessWidget {
                 child: Icon(Icons.stairs_rounded, color: Colors.white),
               ),
               title: Text(
-                item,
+                items[index],
                 style: GoogleFonts.tiroBangla(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                   color: const Color(0xFF0A192F),
                 ),
               ),
-              subtitle: const Text('তলার তালিকা ও বিস্তারিত দেখতে ক্লিক করুন'),
+              subtitle: const Text('তলার তালিকা দেখতে ক্লিক করুন'),
               trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
               onTap: () {
-                // Route for Chief Judicial Magistrate Court (CJM)
-                if (item.contains('চিফ জুডিশিয়াল ম্যাজিস্ট্রেট') || item.contains('CJM')) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CjmCourtScreen(),
-                    ),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CourtDetailsScreen(courtName: item),
-                    ),
-                  );
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CourtDetailsScreen(courtName: items[index]),
+                  ),
+                );
               },
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-// ------------------- PREMIUM CJM COURT DIRECTORY SCREEN -------------------
-
-class CjmCourtScreen extends StatefulWidget {
-  const CjmCourtScreen({super.key});
-
-  @override
-  State<CjmCourtScreen> createState() => _CjmCourtScreenState();
-}
-
-class _CjmCourtScreenState extends State<CjmCourtScreen> {
-  String selectedFloor = 'সব ফ্লোর';
-  String searchQuery = '';
-
-  final List<String> floorList = [
-    'সব ফ্লোর',
-    '২য় তলা',
-    '৩য় তলা',
-    '৪র্থ তলা',
-    '৫ম তলা',
-    '৬ষ্ঠ তলা',
-    '৭ম তলা',
-    '৮ম তলা',
-    '৯ম তলা',
-  ];
-
-  final List<Map<String, String>> cjmData = [
-    // ২য় তলা
-    {'floor': '২য় তলা', 'room': '২০১', 'title': 'রেকর্ড শাখা', 'details': 'কর্মকর্তা: আব্দুল্লাহ-আল-মাহমুদ (রেকর্ড কিপার)', 'contact': '01685216681, 01734299955, হেল্পলাইন: 01335-145001'},
-    {'floor': '২য় তলা', 'room': '২০২', 'title': 'প্রশাসনিক কর্মকর্তা', 'details': 'প্রশাসনি জামানত ও হাইকোর্ট বিভাগ সংক্রান্ত আপীল আদালত বিষয়ক শাখা।', 'contact': ''},
-    {'floor': '২য় তলা', 'room': '২০৩', 'title': 'নেজারত শাখা', 'details': 'নেজারত হেল্পলাইন সংক্রান্ত কাজ', 'contact': '০১৩৩৫-১৪৫০০১'},
-    {'floor': '২য় তলা', 'room': '২০৪', 'title': 'জুডিশিয়াল মুন্সীখানা অফিস', 'details': 'জুডিশিয়াল মুন্সীখানা প্রশাসনিক কাজ', 'contact': '০১৩৩৫-১৪৫০০১'},
-    {'floor': '২য় তলা', 'room': 'হাজতখানা', 'title': 'সিজিএম কোর্ট হাজতখানা', 'details': 'নিরাপত্তা বিশেষ নির্দেশ: বিনা অনুমতিতে প্রবেশ সম্পূর্ণ নিষেধ।', 'contact': ''},
-
-    // ৩য় তলা
-    {'floor': '৩য় তলা', 'room': '৩০১', 'title': 'চীফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত', 'details': 'প্রধান আদালত, চীফ জুডিশিয়াল ম্যাজিস্ট্রেট, ঢাকা।', 'contact': ''},
-    {'floor': '৩য় তলা', 'room': '৩০২', 'title': 'অতিরিক্ত চীফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত', 'details': 'অতিরিক্ত চীফ জুডিশিয়াল ম্যাজিস্ট্রেট, ঢাকা।', 'contact': ''},
-    {'floor': '৩য় তলা', 'room': '৩০৩', 'title': 'সম্মেলন ও মিলনায়তন', 'details': 'কনফারেন্স ও মিটিং রুম।', 'contact': ''},
-    {'floor': '৩য় তলা', 'room': '৩০৪', 'title': 'স্টেনোগ্রাফার শাখা (CJM)', 'details': 'চীফ জুডিশিয়াল ম্যাজিস্ট্রেট স্টেনোগ্রাফার কক্ষ।', 'contact': ''},
-    {'floor': '৩য় তলা', 'room': '৩০৫', 'title': 'অতিথি কক্ষ (Guest Room)', 'details': 'দর্শনার্থী ও অতিথি বিশ্রামাগার।', 'contact': ''},
-    {'floor': '৩য় তলা', 'room': '৩০৬', 'title': 'হিসাব শাখা', 'details': 'অর্থ শাখা, জেলা ও দায়রা জজ এবং সিজিএম আদালত, ঢাকা।', 'contact': '০১৩৩৫-১৪৫০০১'},
-    {'floor': '৩য় তলা', 'room': '৩০৭', 'title': 'স্টেনোগ্রাফার (ACJM) ও শাখা', 'details': 'অতিরিক্ত চীফ জুডিশিয়াল ম্যাজিস্ট্রেট শাখা ও স্টেনো কক্ষ।', 'contact': ''},
-    {'floor': '৩য় তলা', 'room': '৩০৮', 'title': 'আদালত লাইব্রেরী', 'details': 'লাইব্রেরী আইন গ্রন্থ ও নথিভিত্তিক পাঠাগার।', 'contact': ''},
-
-    // ৪র্থ তলা
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: মোহাম্মদপুর ও আদাবর থানা', 'details': 'G.R. অপরাধ তথ্য ও প্রসেকিউশন বিভাগ, ডিএমপি।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: রামপুরা ও সবুজবাগ থানা', 'details': 'G.R. অপরাধ তথ্য ও প্রসেকিউশন বিভাগ।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': '৪১১', 'title': 'জি.আর. শাখা: মিরপুর, শেরেবাংলা নগর, শাহআলী ও দারুস-সালাম থানা', 'details': 'জি.আর. সেকশন।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': '৪১২', 'title': 'জি.আর. শাখা: বাড্ডা ও ভাটারা থানা', 'details': 'G.R. জি.আর. সেকশন।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': '৪১৩', 'title': 'জি.আর. শাখা: লালবাগ, চকবাজার, কামরাঙ্গীরচর, কোতয়ালী ও বংশাল থানা', 'details': 'জি.আর. শাখা ও প্রসেকিউশন বিভাগ।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': '৪০৬', 'title': 'জি.আর. শাখা: মতিঝিল, পল্টন ও শাহজাহানপুর থানা', 'details': 'G.R. জি.আর. শাখা, প্রসেকিউশন বিভাগ।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: রমনা ও শাহবাগ থানা', 'details': 'G.R. প্যারাফ্যাসিলিটি পরামর্শ', 'contact': '01647130339'},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: মিরপুর, পল্লবী, রূপনগর, কাফরুল ও ভাসানটেক থানা', 'details': 'প্যারাফ্যাসিলিটি পরামর্শ', 'contact': '01647130339'},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: নিউমার্কেট ও কলাবাগান থানা', 'details': 'G.R. প্রসেকিউশন বিভাগ, ডিএমপি।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: খিলক্ষেত ও ক্যান্টনমেন্ট থানা', 'details': 'G.R. প্রসেকিউশন বিভাগ, ডিএমপি।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: সূত্রাপুর, গেন্ডারিয়া ও ওয়ারী থানা', 'details': 'G.R. প্রসেকিউশন বিভাগ, ডিএমপি।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: তেজগাঁও, তেজগাঁও শিল্পাঞ্চল ও হাতিরঝিল থানা', 'details': 'জি.আর. শাখা ও প্রসেকিউশন।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: গুলশান ও বনানী থানা', 'details': 'G.R. জি.আর. শাখা।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: কদমতলী ও শ্যামপুর থানা', 'details': 'G.R. জি.আর. শাখা।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: যাত্রাবাড়ী, ডেমরা, খিলগাঁও ও মুগদা থানা', 'details': 'G.R. জি.আর. শাখা।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: বিমানবন্দর, উত্তরখান ও দক্ষিণখান থানা', 'details': 'জি.আর. শাখা।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: ধানমন্ডি ও হাজারীবাগ থানা', 'details': 'G.R. জি.আর. শাখা।', 'contact': ''},
-    {'floor': '৪র্থ তলা', 'room': 'রিসিভ', 'title': 'শাখা রিসিভ ও ডেসপ্যাচ শাখা (DMP)', 'details': 'ডিএমপি, ঢাকা শাখা রিসিভ-ডেসপ্যাচ।', 'contact': ''},
-
-    // ৫ম তলা
-    {'floor': '৫ম তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: দোহার, নবাবগঞ্জ, ধামরাই, আশুলিয়া ও সাভার থানা', 'details': 'ঢাকা জেলা উপজেলার জি.আর. শাখাসমূহ।', 'contact': ''},
-    {'floor': '৫ম তলা', 'room': 'G.R.', 'title': 'জি.আর. শাখা: কেরানীগঞ্জ ও দক্ষিণ কেরানীগঞ্জ থানা', 'details': 'জি.আর. শাখা।', 'contact': ''},
-    {'floor': '৫ম তলা', 'room': 'Non-GR', 'title': 'নন-জি.আর. শাখা: সাভার, আশুলিয়া, ধামরাই ও রেলওয়ে থানা', 'details': 'নন-জি.আর. মামলা শাখা।', 'contact': ''},
-    {'floor': '৫ম তলা', 'room': '২৯', 'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (আদালত ২৯)', 'details': 'কোর্ট বিচারের দায়িত্বে: আলবেরুনী মীর।', 'contact': ''},
-    {'floor': '৫ম তলা', 'room': 'Legal Aid', 'title': 'জেলা লিগ্যাল এইড অফিসারের কার্যালয়', 'details': 'আইনি সহায়তা, বিনামূল্যে সরকারি আইনি সহায়তা কেন্দ্র।', 'contact': ''},
-    {'floor': '৫ম তলা', 'room': 'Record', 'title': 'পুলিশ রেকর্ড রুম (সিডি শাখা)', 'details': 'গোপনীয় শাখা / কেস ডায়েরি (CD) শাখা।', 'contact': ''},
-    {'floor': '৫ম তলা', 'room': 'Prosecution', 'title': 'মাদক প্রসেকিউশন সেকশন', 'details': 'মাদকদ্রব্য নিয়ন্ত্রণ প্রসেকিউশন সেকশন ঢাকা মেট্রো (উত্তর), ঢাকা মেট্রো (দক্ষিণ) ও ঢাকা জেলা কার্যালয়।', 'contact': ''},
-    {'floor': '৫ম তলা', 'room': 'IT Room', 'title': 'ডিজিটাল ডাটা ম্যানেজমেন্ট রুম', 'details': 'কোঅর্ডিনেশন ও তথ্য ব্যবস্থাপনা রুম (কোর্ট পুলিশ, ঢাকা জেলা)।', 'contact': ''},
-
-    // ৬ষ্ঠ তলা
-    {'floor': '৬ষ্ঠ তলা', 'room': '৬০১', 'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-৩, ঢাকা কোর্ট', 'details': 'স্টেনো টাইপিস্ট: কক্ষ নং-৬০৫', 'contact': ''},
-    {'floor': '৬ষ্ঠ তলা', 'room': '৬০২', 'title': 'সিনিয়র জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-১, ঢাকা কোর্ট', 'details': 'স্টেনো টাইপিস্ট: কক্ষ নং-৬০৬', 'contact': ''},
-    {'floor': '৬ষ্ঠ তলা', 'room': '৬০৩', 'title': 'সিনিয়র জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-২, ঢাকা কোর্ট', 'details': 'স্টেনো টাইপিস্ট: কক্ষ নং-৬০৭', 'contact': ''},
-    {'floor': '৬ষ্ঠ তলা', 'room': '৬০৪', 'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-২, ঢাকা কোর্ট', 'details': 'স্টেনো টাইপিস্ট: কক্ষ নং-৬০৮', 'contact': ''},
-
-    // ৭ম তলা
-    {'floor': '৭ম তলা', 'room': '৭০১', 'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-৫, ঢাকা কোর্ট', 'details': 'স্টেনো টাইপিস্ট: কক্ষ নং-৭০৫', 'contact': ''},
-    {'floor': '৭ম তলা', 'room': '৭০২', 'title': 'সিনিয়র জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-৩, ঢাকা কোর্ট', 'details': 'স্টেনো টাইপিস্ট: কক্ষ নং-৭০৬', 'contact': ''},
-    {'floor': '৭ম তলা', 'room': '৭০৩', 'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-১, ঢাকা কোর্ট', 'details': 'স্টেনো টাইপিস্ট: কক্ষ নং-৭০৭', 'contact': ''},
-    {'floor': '৭ম তলা', 'room': '৭০৪', 'title': 'জুডিশিয়াল ম্যাজিস্ট্রেট আদালত নং-৪, ঢাকা কোর্ট', 'details': 'স্টেনো টাইপিস্ট: কক্ষ নং-৭০৮', 'contact': ''},
-    {'floor': '৭ম তলা', 'room': '৭০০', 'title': 'ফর্মস অ্যান্ড স্টেশনারী শাখা', 'details': 'সরবরাহ সরকারি ফরম ও প্রয়োজনীয় স্টেশনারী শাখা।', 'contact': ''},
-
-    // ৮ম তলা
-    {'floor': '৮ম তলা', 'room': '৩০', 'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট আদালত নং-৩০ কোর্ট', 'details': 'বিচারক: মোঃ সিদ্দিক আজাদ (এজলাস)', 'contact': ''},
-    {'floor': '৮ম তলা', 'room': 'Tribunal', 'title': 'সন্ত্রাস বিরোধী বিশেষ ট্রাইব্যুনাল, ঢাকা', 'details': 'Anti-Terrorism Special Tribunal, Dhaka (এজলাস ও অফিস)', 'contact': ''},
-    {'floor': '৮ম তলা', 'room': '৩৬', 'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট আদালত নং-৩৬ কোর্ট', 'details': 'বিচারকের খাসকামরা ও এজলাস।', 'contact': ''},
-    {'floor': '৮ম তলা', 'room': 'Appeal', 'title': 'পারিবারিক আপীল আদালত নং-১, ঢাকা', 'details': 'পারিবারিক বিরোধ আপীল শুনানী আদালত।', 'contact': ''},
-    {'floor': '৮ম তলা', 'room': 'Special', 'title': 'স্পেশাল জেলা জজ ও স্পেশাল দায়রা জজ আদালত', 'details': 'বিশেষ জজ আদালত, ঢাকা।', 'contact': ''},
-    {'floor': '৮ম তলা', 'room': '৬০', 'title': '৩১নং আদালতের সেরেস্তা', 'details': 'সেরেস্তা ৩১ নম্বর আদালতের সেরেস্তা শাখা।', 'contact': ''},
-
-    // ৯এম তলা
-    {'floor': '৯ম তলা', 'room': '৩৩', 'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট আদালত নং-৩৩ কোর্ট', 'details': 'বিচারক: মহেদী হাসান (বিচারকের খাসকামরা ও এজলাস)।', 'contact': ''},
-    {'floor': '৯ম তলা', 'room': '৩৪', 'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট ও দ্রুত বিচার আদালত (নং-০৭)', 'details': 'বিচারক: মোঃ আশরাফুল হক, সিএমএম কোর্ট, ঢাকা।', 'contact': ''},
-    {'floor': '৯ম তলা', 'room': '৩৫', 'title': 'মেট্রোপলিটন ম্যাজিস্ট্রেট আদালত নং-৩৫ কোর্ট', 'details': 'বিচারক: মোঃ রকিবুল হাসান', 'contact': ''},
-    {'floor': '৯ম তলা', 'room': 'Seresta', 'title': '৩২নং ও ৩৭নং আদালতের সেরেস্তা', 'details': '৩২ নম্বর কোর্ট সেরেস্তা ও ৩৭ নম্বর কোর্টের সেরেস্তা শাখা।', 'contact': ''},
-    {'floor': '৯ম তলা', 'room': '৩৩/০৬', 'title': 'দ্রুত বিচার আদালত নং-০৬', 'details': 'স্পেশাল জেলা জজ ও স্পেশাল দায়রা জজ আদালত সংলগ্ন।', 'contact': ''},
-    {'floor': '৯ম তলা', 'room': 'আপীল-৪', 'title': 'পারিবারিক আপিল আদালত নং-০৪, ঢাকা', 'details': 'বর্তমানে: জেলা ও দায়রা জজ এর কার্যালয়, ঢাকা।', 'contact': ''},
-    {'floor': '৯ম তলা', 'room': 'PP', 'title': 'পাবলিক প্রসেকিউশন (পিপি)', 'details': 'রুবিনা আক্তার রুবা (অ্যাডভোকেট, সুপ্রিম কোর্ট), অতিরিক্ত পাবলিক প্রসেকিউটর, পারিবারিক আপিল আদালত-৪', 'contact': '01711224406'},
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    List<Map<String, String>> filteredData = cjmData.where((item) {
-      final matchesFloor = selectedFloor == 'সব ফ্লোর' || item['floor'] == selectedFloor;
-      final matchesQuery = searchQuery.isEmpty ||
-          item['title']!.toLowerCase().contains(searchQuery.toLowerCase()) ||
-          item['room']!.toLowerCase().contains(searchQuery.toLowerCase()) ||
-          item['details']!.toLowerCase().contains(searchQuery.toLowerCase());
-      return matchesFloor && matchesQuery;
-    }).toList();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'চিফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত (CJM)',
-          style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 17),
-        ),
-        backgroundColor: const Color(0xFF0A192F),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Column(
-        children: [
-          // Banner & Quick Search Area
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Color(0xFF0A192F),
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-            ),
-            child: Column(
-              children: [
-                TextField(
-                  onChanged: (val) {
-                    setState(() {
-                      searchQuery = val;
-                    });
-                  },
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: 'CJM কোর্ট, রুম নং বা থানা খুঁজুন...',
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
-                    prefixIcon: const Icon(Icons.search, color: Color(0xFFD4AF37)),
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.12),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.info_outline, color: Color(0xFFD4AF37), size: 16),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        'CJM ভবনের ২য় থেকে ৯table তলা পর্যন্ত সম্পূর্ণ ফ্লোর-প্ল্যান ও ডিরেক্টরি',
-                        style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 11),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Horizontal Floor Filter Chips
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-            color: Colors.white,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: floorList.map((floor) {
-                  final isSelected = selectedFloor == floor;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: ChoiceChip(
-                      label: Text(
-                        floor,
-                        style: GoogleFonts.tiroBangla(
-                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          fontSize: 13,
-                        ),
-                      ),
-                      selected: isSelected,
-                      selectedColor: const Color(0xFFD4AF37),
-                      backgroundColor: const Color(0xFFF4F6F9),
-                      onSelected: (bool selected) {
-                        setState(() {
-                          selectedFloor = floor;
-                        });
-                      },
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-
-          // Items List View
-          Expanded(
-            child: filteredData.isEmpty
-                ? Center(
-                    child: Text(
-                      'কোন তথ্য পাওয়া যায়নি',
-                      style: GoogleFonts.tiroBangla(fontSize: 16, color: Colors.grey),
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(12),
-                    itemCount: filteredData.length,
-                    itemBuilder: (context, index) {
-                      final item = filteredData[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Floor Badge
-                              Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF0A192F),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      item['floor']!,
-                                      style: GoogleFonts.tiroBangla(
-                                        color: Colors.white,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFD4AF37).withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(color: const Color(0xFFD4AF37), width: 0.8),
-                                    ),
-                                    child: Text(
-                                      'কক্ষ: ${item['room']}',
-                                      style: GoogleFonts.tiroBangla(
-                                        color: const Color(0xFF0A192F),
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 14),
-
-                              // Detailed Content
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item['title']!,
-                                      style: GoogleFonts.tiroBangla(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF0A192F),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      item['details']!,
-                                      // ✅ সঠিক কোড: style: TextStyle(
-                                      fontSize: 12.5,
-                                      color: Colors.black.withOpacity(0.7), // অথবা Colors.black87 ব্যবহার করতে পারেন
-                                      height: 1.3,
-                                    ),
-                                  ),
-                                    if (item['contact'] != null && item['contact']!.isNotEmpty) ...[
-                                      const SizedBox(height: 8),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.phone, size: 14, color: Color(0xFFD4AF37)),
-                                          const SizedBox(width: 4),
-                                          Expanded(
-                                            child: Text(
-                                              item['contact']!,
-                                              style: GoogleFonts.tiroBangla(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                                color: const Color(0xFF0A192F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-          ),
-        ],
       ),
     );
   }
@@ -910,7 +1384,6 @@ class _MetropolitanSessionsCourtScreenState
               ),
             ),
           ),
-
 
           // Court Cards List
           Expanded(
@@ -1213,3 +1686,5 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
     );
   }
 }
+
+    
