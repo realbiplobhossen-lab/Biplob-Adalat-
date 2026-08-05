@@ -634,12 +634,12 @@ class _CjmCourtScreenState extends State<CjmCourtScreen> {
                                     const SizedBox(height: 6),
                                     Text(
                                       item['details']!,
-                                      style: const TextStyle(
-                                        fontSize: 12.5,
-                                        color: Colors.black70,
-                                        height: 1.3,
-                                      ),
+                                      // ✅ সঠিক কোড: style: TextStyle(
+                                      fontSize: 12.5,
+                                      color: Colors.black.withOpacity(0.7), // অথবা Colors.black87 ব্যবহার করতে পারেন
+                                      height: 1.3,
                                     ),
+                                  ),
                                     if (item['contact'] != null && item['contact']!.isNotEmpty) ...[
                                       const SizedBox(height: 8),
                                       Row(
