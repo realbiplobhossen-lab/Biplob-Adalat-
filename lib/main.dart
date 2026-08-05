@@ -122,33 +122,20 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Main Category Buttons
+            // Main Category Buttons (৪টি মূল ক্যাটাগরি)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
                   _buildMainCategoryCard(
-                    title: 'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM)',
-                    subtitle: 'CMM ভবনের ২য় থেকে ৯মন তলার কোর্ট ও শাখা সূচী',
+                    title: 'ম্যাজিস্ট্রেট কোর্ট',
+                    subtitle: 'CMM, CJM এবং নির্বাহী ম্যাজিস্ট্রেট কোর্টের তালিকা',
                     icon: Icons.gavel,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const CMMCourtScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildMainCategoryCard(
-                    title: 'চিফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত (CJM)',
-                    subtitle: 'CJM ভবনের ২য় থেকে ৯মন তলার ফ্লোর নির্দেশিকা',
-                    icon: Icons.account_balance,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CJMCourtScreen(),
+                          builder: (context) => const MagistrateCourtMenuScreen(),
                         ),
                       );
                     },
@@ -274,6 +261,112 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   }
 }
 
+// ------------------- MAGISTRATE COURT MENU SCREEN -------------------
+
+class MagistrateCourtMenuScreen extends StatelessWidget {
+  const MagistrateCourtMenuScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'ম্যাজিস্ট্রেট কোর্ট',
+          style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 20),
+        ),
+        backgroundColor: const Color(0xFF0A192F),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildMenuOptionCard(
+            title: 'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট\n(CMM)',
+            subtitle: 'তলার তালিকা দেখতে ক্লিক করুন',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CMMCourtScreen()),
+              );
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildMenuOptionCard(
+            title: 'চিফ জুডিশিয়াল ম্যাজিস্ট্রেট কোর্ট\n(CJM)',
+            subtitle: 'তলার তালিকা দেখতে ক্লিক করুন',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CJMCourtScreen()),
+              );
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildMenuOptionCard(
+            title: 'নির্বাহী ম্যাজিস্ট্রেট কোর্ট',
+            subtitle: 'তলার তালিকা দেখতে ক্লিক করুন',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CourtDetailsScreen(
+                    courtName: 'নির্বাহী ম্যাজিস্ট্রেট কোর্ট',
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuOptionCard({
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFEEF2F9),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color(0xFFD4AF37),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Icon(
+            Icons.stairs_rounded,
+            color: Colors.white,
+            size: 28,
+          ),
+        ),
+        title: Text(
+          title,
+          style: GoogleFonts.tiroBangla(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFF0A192F),
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Text(
+            subtitle,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 18),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
 // ------------------- CMM COURT SCREEN (PDF DIRECTORY) -------------------
 
 class CMMCourtScreen extends StatefulWidget {
@@ -303,76 +396,76 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
     {
       'floor': '২য় তলা',
       'title': 'জি. আর শাখা এবং কোর্ট নং-২৭, ২৮',
-      'sub': 'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM), ঢাকা[span_1](start_span)[span_1](end_span)'
+      'sub': 'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM), ঢাকা'
     },
     {
       'floor': '২য় তলা',
       'title': 'জিআর শাখা (GR Section)',
-      'sub': 'ঢাকা মেট্রোপলিটন পুলিশ (DMP)[span_2](start_span)[span_2](end_span)'
+      'sub': 'ঢাকা মেট্রোপলিটন পুলিশ (DMP)'
     },
     {
       'floor': '২য় তলা',
       'title': 'নারী ও শিশু জি. আর শাখা',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_3](start_span)[span_3](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
     {
       'floor': '২য় তলা',
       'title': 'পি.আর শাখা',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_4](start_span)[span_4](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
     {
       'floor': '২য় তলা',
       'title': 'অতিরিক্ত পুলিশ কমিশনারের কার্যালয়',
-      'sub': 'ঢাকা মেট্রোপলিটন পুলিশ[span_5](start_span)[span_5](end_span)'
+      'sub': 'ঢাকা মেট্রোপলিটন পুলিশ'
     },
 
     // ৩য় তলা
     {
       'floor': '৩য় তলা',
       'title': 'কোর্ট নং-০১, ০২ এবং নেজারত শাখা',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_6](start_span)[span_6](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
 
     // ৪র্থ তলা
     {
       'floor': '৪র্থ তলা',
       'title': 'কোর্ট নং-৩, ৪, ৫, ৬',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_7](start_span)[span_7](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
 
     // ৫ম তলা
     {
       'floor': '৫ম তলা',
       'title': 'কোর্ট নং-৭, ৮, ৯, ১০',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_8](start_span)[span_8](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
 
     // ৬ষ্ঠ তলা
     {
       'floor': '৬ষ্ঠ তলা',
       'title': 'কোর্ট নং-১১, ১২, ১৩, ১৪',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_9](start_span)[span_9](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
 
     // ৭ম তলা
     {
       'floor': '৭ম তলা',
       'title': 'কোর্ট নং-১৫, ১৬, ১৭, ১৮',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_10](start_span)[span_10](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
 
     // ৮ম তলা
     {
       'floor': '৮ম তলা',
       'title': 'কোর্ট নং-১৯, ২০, ২১, ২২',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_11](start_span)[span_11](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
 
     // ৯মে তলা
     {
       'floor': '৯ম তলা',
       'title': 'কোর্ট নং-২৩, ২৪, ২৫, ২৬',
-      'sub': 'সি.এম.এম কোর্ট, ঢাকা[span_12](start_span)[span_12](end_span)'
+      'sub': 'সি.এম.এম কোর্ট, ঢাকা'
     },
   ];
 
@@ -386,7 +479,7 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
       appBar: AppBar(
         title: Text(
           'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM)',
-          style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 17),
+          style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
         backgroundColor: const Color(0xFF0A192F),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -1686,5 +1779,3 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
     );
   }
 }
-
-    
