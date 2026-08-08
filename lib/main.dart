@@ -14,23 +14,21 @@ class BiplobAdalatApp extends StatelessWidget {
     return MaterialApp(
       title: 'Biplob Adalat',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        primaryColor: const Color(0xFF0A192F),
-        scaffoldBackgroundColor: const Color(0xFFF4F6F9),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0A192F),
-          primary: const Color(0xFF0A192F),
-          secondary: const Color(0xFFD4AF37), // Premium Gold accent
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF071220), // ছবির মতো গাঢ় নীল ব্যাকগ্রাউন্ড
+        primaryColor: const Color(0xFF071220),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF4EE8FF), // Neon cyan accent
+          secondary: Color(0xFFE2C475), // Gold accent
         ),
-        textTheme: GoogleFonts.tiroBanglaTextTheme(Theme.of(context).textTheme),
+        textTheme: GoogleFonts.tiroBanglaTextTheme(ThemeData.dark().textTheme),
       ),
       home: const MainHomeScreen(),
     );
   }
 }
 
-// ------------------- MAIN HOME SCREEN -------------------
+// ------------------- MAIN HOME SCREEN (হুবহু ছবির ডিজাইন) -------------------
 
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({super.key});
@@ -45,209 +43,315 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: const Color(0xFF0A192F),
-        title: Text(
-          'Biplob Adalat',
-          style: GoogleFonts.tiroBangla(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFF060E18),
+          image: DecorationImage(
+            image: AssetImage('assets/bg.png'), // সাইবার ব্যাকগ্রাউন্ড ইমেজ
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
           ),
         ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.psychology, color: Color(0xFFD4AF37), size: 28),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const GeminiAIScreen()),
-              );
-            },
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header Search & Banner
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(
-                color: Color(0xFF0A192F),
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
-              ),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _searchController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: 'কোর্ট বা রুম নম্বর খুঁজুন...',
-                      hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
-                      prefixIcon: const Icon(Icons.search, color: Color(0xFFD4AF37)),
-                      filled: true,
-                      fillColor: Colors.white.withOpacity(0.1),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            child: Column(
+              children: [
+                // ১. প্রোফাইল কার্ড (ছবি ও বিস্তারিত তথ্য)
+                _buildProfileHeaderCard(),
+                const SizedBox(height: 15),
+
+                // ২. অ্যাপ টাইটেল ও AI আইকন
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 32), // Balance center alignment
+                    Expanded(
+                      child: Text(
+                        'Biplob Adalat',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.tiroBangla(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.1,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD4AF37).withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFD4AF37), width: 0.8),
+                    IconButton(
+                      icon: const Icon(Icons.psychology, color: Color(0xFFE2C475), size: 28),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const GeminiAIScreen()),
+                        );
+                      },
                     ),
-                    child: const Row(
+                  ],
+                ),
+                const SizedBox(height: 15),
+
+                // ৩. সার্চ বার
+                TextField(
+                  controller: _searchController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'কোর্ট বা রুম নম্বর খুঁজুন...',
+                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                    prefixIcon: const Icon(Icons.search, color: Color(0xFFE2C475), size: 24),
+                    filled: true,
+                    fillColor: const Color(0xFF101E31).withOpacity(0.8),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF1F3858), width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF4EE8FF), width: 1.5),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+
+                // ৪. স্লোগান ব্যানার
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF101E31).withOpacity(0.85),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFE2C475), width: 1),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.gavel_rounded, color: Color(0xFFE2C475), size: 26),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'আইনজীবী ও বিচারপ্রার্থীদের জন্য দ্রুত কোর্ট ট্র্যাকিং সমাধান',
+                          style: GoogleFonts.tiroBangla(
+                            color: Colors.white,
+                            fontSize: 13,
+                            height: 1.2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // ৫. মূল ক্যাটাগরি বাটনসমূহ (৪টিCyber Frame)
+                _buildCyberCategoryCard(
+                  title: 'ম্যাজিস্ট্রেট কোর্ট',
+                  subtitle: 'CMM, CJM এবং নির্বাহী ম্যাজিস্ট্রেট কোর্টের তালিকা',
+                  icon: Icons.gavel_outlined,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MagistrateCourtMenuScreen(),
+                      ),
+                    );
+                  },
+                ),
+                _buildCyberCategoryCard(
+                  title: 'মহানগর দায়রা জজ আদালত',
+                  subtitle: 'ভবন ও টিন শেড-এর ফ্লোর ভিত্তিক সকল কোর্ট',
+                  icon: Icons.gavel_rounded,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MetropolitanSessionsCourtScreen(),
+                      ),
+                    );
+                  },
+                ),
+                _buildCyberCategoryCard(
+                  title: 'জেলা ও দায়রা জজ আদালত',
+                  subtitle: 'নতুন ও পুরাতন বিল্ডিং ভবন',
+                  icon: Icons.business_rounded,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DistrictCourtMenuScreen(),
+                      ),
+                    );
+                  },
+                ),
+                _buildCyberCategoryCard(
+                  title: 'রেবতী ম্যানশন, জেলা জজ আদালত',
+                  subtitle: 'রেবতী ম্যানশনের সংশ্লিষ্ট সকল কোর্টসমূহ',
+                  icon: Icons.location_city_rounded,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RebotiMansionScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // ৬. Need Any Help বাটন
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const GeminiAIScreen()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD3B35A),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.white70, width: 1.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFD3B35A).withOpacity(0.3),
+                          blurRadius: 8,
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.gavel, color: Color(0xFFD4AF37)),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            'আইনজীবী ও বিচারপ্রার্থীদের জন্য দ্রুত কোর্ট ট্র্যাকিং সমাধান',
-                            style: TextStyle(color: Colors.white, fontSize: 13),
+                        const Icon(Icons.auto_awesome, color: Colors.black87, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Need any Help',
+                          style: GoogleFonts.tiroBangla(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
                         ),
                       ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-            const SizedBox(height: 20),
-
-            // Main Category Buttons (৪টি মূল ক্যাটাগরি)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  _buildMainCategoryCard(
-                    title: 'ম্যাজিস্ট্রেট কোর্ট',
-                    subtitle: 'CMM, CJM এবং নির্বাহী ম্যাজিস্ট্রেট কোর্টের তালিকা',
-                    icon: Icons.gavel,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MagistrateCourtMenuScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildMainCategoryCard(
-                    title: 'মহানগর দায়রা জজ আদালত',
-                    subtitle: 'ভবন ও টিন শেড-এর ফ্লোর ভিত্তিক সকল কোর্ট',
-                    icon: Icons.gavel_rounded,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MetropolitanSessionsCourtScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildMainCategoryCard(
-                    title: 'জেলা ও দায়রা জজ আদালত',
-                    subtitle: 'নতুন ও পুরাতন বিল্ডিং ভবন',
-                    icon: Icons.domain,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DistrictCourtMenuScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildMainCategoryCard(
-                    title: 'রেবতী ম্যানশন, জেলা জজ আদালত',
-                    subtitle: 'রেবতী ম্যানশনের সংশ্লিষ্ট সকল কোর্টসমূহ',
-                    icon: Icons.location_city,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RebotiMansionScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: const Color(0xFFD4AF37),
-        icon: const Icon(Icons.auto_awesome, color: Color(0xFF0A192F)),
-        label: Text(
-          'Gemini AI অ্যাসিস্ট্যান্ট',
-          style: GoogleFonts.tiroBangla(
-            color: const Color(0xFF0A192F),
-            fontWeight: FontWeight.bold,
           ),
         ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const GeminiAIScreen()),
-          );
-        },
       ),
     );
   }
 
-  Widget _buildMainCategoryCard({
+  // প্রোফাইল কার্ড হেডার (সাইবার বর্ডার সহ)
+  Widget _buildProfileHeaderCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF0C1B2C).withOpacity(0.85),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF4EE8FF), width: 1.2),
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // টাই পরা প্রোফাইল পিকচার
+          Container(
+            width: 100,
+            height: 110,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: const Color(0xFF4EE8FF), width: 1),
+              image: const DecorationImage(
+                image: AssetImage('assets/profile.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // এডভোকেট তথ্য
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Biplob Hossen',
+                  style: GoogleFonts.tiroBangla(
+                    color: const Color(0xFFE2C475),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  'LL.B (Hon\'s), LL.M',
+                  style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500),
+                ),
+                const Text(
+                  'Apprentice Lawyer,',
+                  style: TextStyle(color: Colors.white70, fontSize: 11),
+                ),
+                const Text(
+                  'Dhaka Judge Court.',
+                  style: TextStyle(color: Colors.white70, fontSize: 11),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Email: biplobdiu67@gmail.com',
+                  style: TextStyle(color: Colors.white60, fontSize: 10),
+                ),
+                const Text(
+                  'WhatsApp: 01757700054',
+                  style: TextStyle(color: Colors.white60, fontSize: 10),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // সাইবার ফ্রেম ক্যাটাগরি কার্ড
+  Widget _buildCyberCategoryCard({
     required String title,
     required String subtitle,
     required IconData icon,
     required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 15),
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
+        color: const Color(0xFF0D1C2E).withOpacity(0.85),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF264C72), width: 1.2),
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         leading: Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: const Color(0xFF0A192F).withOpacity(0.08),
-            borderRadius: BorderRadius.circular(12),
+            color: const Color(0xFF152A42),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: const Color(0xFF4EE8FF), width: 1),
           ),
-          child: Icon(icon, color: const Color(0xFF0A192F), size: 28),
+          child: Icon(icon, color: Colors.white, size: 26),
         ),
         title: Text(
           title,
           style: GoogleFonts.tiroBangla(
+            color: Colors.white,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
-            fontSize: 17,
-            color: const Color(0xFF0A192F),
           ),
         ),
         subtitle: Text(
           subtitle,
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
+          style: const TextStyle(color: Colors.white60, fontSize: 11),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFFD4AF37), size: 18),
-        onTap: onTap,
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFFE2C475), size: 18),
       ),
     );
   }
@@ -266,7 +370,7 @@ class MagistrateCourtMenuScreen extends StatelessWidget {
           'ম্যাজিস্ট্রেট কোর্ট',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 20),
         ),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ListView(
@@ -320,20 +424,21 @@ class MagistrateCourtMenuScreen extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFEEF2F9),
+        color: const Color(0xFF0D1C2E),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF264C72)),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: const Color(0xFFD4AF37),
+            color: const Color(0xFFE2C475),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Icon(
             Icons.stairs_rounded,
-            color: Colors.white,
+            color: Colors.black,
             size: 28,
           ),
         ),
@@ -342,17 +447,17 @@ class MagistrateCourtMenuScreen extends StatelessWidget {
           style: GoogleFonts.tiroBangla(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF0A192F),
+            color: Colors.white,
           ),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 4.0),
           child: Text(
             subtitle,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            style: const TextStyle(fontSize: 12, color: Colors.white60),
           ),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 18),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white70, size: 18),
         onTap: onTap,
       ),
     );
@@ -398,7 +503,7 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
     {'floor': '৯ম তলা', 'title': 'কোর্ট নং-২৩, ২৪, ২৫, ২৬', 'sub': 'সি.এম.এম কোর্ট, ঢাকা'},
   ];
 
-  @override
+ @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> filteredCourts = selectedFloor == 'সব ফ্লোর'
         ? cmmData
@@ -410,17 +515,14 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
           'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
-            ),
+            color: const Color(0xFF0D1C2E),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -432,13 +534,13 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
                       label: Text(
                         floor,
                         style: GoogleFonts.tiroBangla(
-                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          color: isSelected ? Colors.black : Colors.white,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFD4AF37),
-                      backgroundColor: const Color(0xFFF4F6F9),
+                      selectedColor: const Color(0xFFE2C475),
+                      backgroundColor: const Color(0xFF152A42),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -452,7 +554,7 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
           ),
           Expanded(
             child: filteredCourts.isEmpty
-                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি', style: TextStyle(color: Colors.white)))
                 : ListView.builder(
                     padding: const EdgeInsets.all(14),
                     itemCount: filteredCourts.length,
@@ -461,10 +563,9 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF0D1C2E),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade200),
-                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
+                          border: Border.all(color: const Color(0xFF264C72)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -474,8 +575,9 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF0A192F),
+                                  color: const Color(0xFF152A42),
                                   borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
                                 ),
                                 child: Text(
                                   court['floor'],
@@ -496,7 +598,7 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
                                       style: GoogleFonts.tiroBangla(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF0A192F),
+                                        color: Colors.white,
                                       ),
                                     ),
                                     if (court.containsKey('sub')) ...[
@@ -505,7 +607,7 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
                                         court['sub'],
                                         style: GoogleFonts.tiroBangla(
                                           fontSize: 12,
-                                          color: Colors.grey.shade800,
+                                          color: Colors.white70,
                                           height: 1.4,
                                         ),
                                       ),
@@ -625,17 +727,14 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
           'চিফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত (CJM)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 18),
         ),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
-            ),
+            color: const Color(0xFF0D1C2E),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -647,13 +746,13 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
                       label: Text(
                         floor,
                         style: GoogleFonts.tiroBangla(
-                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          color: isSelected ? Colors.black : Colors.white,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFD4AF37),
-                      backgroundColor: const Color(0xFFF4F6F9),
+                      selectedColor: const Color(0xFFE2C475),
+                      backgroundColor: const Color(0xFF152A42),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -667,7 +766,7 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
           ),
           Expanded(
             child: filteredCourts.isEmpty
-                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি', style: TextStyle(color: Colors.white)))
                 : ListView.builder(
                     padding: const EdgeInsets.all(14),
                     itemCount: filteredCourts.length,
@@ -676,10 +775,9 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF0D1C2E),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade200),
-                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
+                          border: Border.all(color: const Color(0xFF264C72)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -691,8 +789,9 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF0A192F),
+                                      color: const Color(0xFF152A42),
                                       borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
                                     ),
                                     child: Text(
                                       court['floor'],
@@ -708,13 +807,13 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFD4AF37).withOpacity(0.2),
+                                        color: const Color(0xFFE2C475).withOpacity(0.2),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
                                         court['room'],
                                         style: GoogleFonts.tiroBangla(
-                                          color: const Color(0xFF0A192F),
+                                          color: const Color(0xFFE2C475),
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -733,7 +832,7 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
                                       style: GoogleFonts.tiroBangla(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF0A192F),
+                                        color: Colors.white,
                                       ),
                                     ),
                                     if (court.containsKey('sub')) ...[
@@ -742,7 +841,7 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
                                         court['sub'],
                                         style: GoogleFonts.tiroBangla(
                                           fontSize: 12,
-                                          color: Colors.grey.shade800,
+                                          color: Colors.white70,
                                           height: 1.4,
                                         ),
                                       ),
@@ -776,7 +875,7 @@ class DistrictCourtMenuScreen extends StatelessWidget {
           'জেলা ও দায়রা জজ আদালত',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 18),
         ),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ListView(
@@ -815,20 +914,21 @@ class DistrictCourtMenuScreen extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFEEF2F9),
+        color: const Color(0xFF0D1C2E),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF264C72)),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: const Color(0xFFD4AF37),
+            color: const Color(0xFFE2C475),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Icon(
             Icons.stairs_rounded,
-            color: Colors.white,
+            color: Colors.black,
             size: 28,
           ),
         ),
@@ -837,24 +937,24 @@ class DistrictCourtMenuScreen extends StatelessWidget {
           style: GoogleFonts.tiroBangla(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF0A192F),
+            color: Colors.white,
           ),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 4.0),
           child: Text(
             subtitle,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            style: const TextStyle(fontSize: 12, color: Colors.white60),
           ),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 18),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white70, size: 18),
         onTap: onTap,
       ),
     );
   }
 }
 
-// ------------------- DISTRICT COURT NEW BUILDING (PDF 1) -------------------
+// ------------------- DISTRICT COURT NEW BUILDING -------------------
 
 class DistrictCourtNewBuildingScreen extends StatefulWidget {
   const DistrictCourtNewBuildingScreen({super.key});
@@ -879,7 +979,6 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
   ];
 
   final List<Map<String, dynamic>> courtData = [
-    // নিচ তলা
     {'floor': 'নিচ তলা', 'title': 'পারিবারিক আপিল আদালত- ৫, ঢাকা', 'sub': 'শাখা / ধরন: বিচারিক আদালত'},
     {'floor': 'নিচ তলা', 'title': 'অর্থঋণ আদালত নং- ৭ (সেরেস্তা শাখা)', 'sub': 'শাখা / ধরন: সেরেস্তা শাখা'},
     {'floor': 'নিচ তলা', 'title': '৫ম অতিরিক্ত সিভিল জজ আদালত, ঢাকা', 'sub': 'শাখা / ধরন: বিচারিক আদালত'},
@@ -892,46 +991,32 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
     {'floor': 'নিচ তলা', 'title': 'পারিবারিক আদালত- ৬, ঢাকা (শাহ আলী, মিরপুর মডেল, পল্লবী, দারুস সালাম ও রূপনগর)', 'sub': 'শাখা / ধরন: পারিবারিক আদালত'},
     {'floor': 'নিচ তলা', 'title': 'সিনিয়র সিভিল জজ আদালত- ৭, ঢাকা', 'sub': 'শাখা / ধরন: বিচারিক আদালত'},
     {'floor': 'নিচ তলা', 'title': 'সিভিল জজ আদালত- ৭, ঢাকা (ওয়ারী, গেন্ডারিয়া ও সূত্রাপুর থানা)', 'sub': 'শাখা / ধরন: বিচারিক আদালত'},
-
-    // ২য় তলা
     {'floor': '২য় তলা', 'title': 'অতিরিক্ত জেলা ও দায়রা জজ ১ম আদালত, ঢাকা', 'sub': 'শাখা / ধরন: বিচারিক আদালত'},
     {'floor': '২য় তলা', 'title': 'বিশেষ ট্রাইব্যুনাল নং- ২, ঢাকা', 'sub': 'শাখা / ধরন: বিশেষ ট্রাইব্যুনাল'},
     {'floor': '২য় তলা', 'title': 'অনুলিপি বিভাগ, জেলা জজ আদালত, ঢাকা', 'sub': 'শাখা / ধরন: প্রশাসনিক শাখা'},
     {'floor': '২য় তলা', 'title': 'সমন শাখা, জজ কোর্ট, ঢাকা', 'sub': 'শাখা / ধরন: প্রশাসনিক শাখা'},
-
-    // ৩য় তলা
     {'floor': '৩য় তলা', 'title': 'সম্মেলন কক্ষ: জেলা ও দায়রা জজ আদালত, ঢাকা', 'sub': 'সম্মেলন ও সভা ঘর'},
     {'floor': '৩য় তলা', 'title': 'নামাজ পড়ার স্থান', 'sub': 'পুরুষ ও নারী পরীক্ষার্থীদের/আইনজীবীদের পৃথক সুব্যবস্থা'},
     {'floor': '৩য় তলা', 'title': 'নোটিশ বোর্ড', 'sub': '১২ দফা আচরণবিধি ও সেবা প্রদান সংক্রান্ত নোটিশ বোর্ড'},
-
-    // ৪র্থ তলা
     {'floor': '৪র্থ তলা', 'title': 'প্রশাসনিক কর্মকর্তা (এ.ও.) সেরেস্তা', 'sub': 'জেলা ও দায়রা জজ আদালত, ঢাকা (প্রশাসনিক বিভাগ)'},
     {'floor': '৪র্থ তলা', 'title': 'দেউলিয়া বিষয়ক আদালত, ঢাকা (বিচারকক্ষ ও সেরেস্তা)', 'sub': 'দেউলিয়া বিচার শাখা'},
     {'floor': '৪র্থ তলা', 'title': 'সম্মেলন ও সেবা শাখা, দেউলিয়া ও ট্রাইব্যুনাল', 'sub': 'সেরেস্তা ও স্টেনোগ্রাফারের রুম'},
     {'floor': '৪র্থ তলা', 'title': 'অতিরিক্ত জেলা ও দায়রা জজ ২য় আদালত, ঢাকা', 'sub': 'বিশেষ ট্রাইব্যুনাল নং-০৩, ঢাকা'},
     {'floor': '৪র্থ তলা', 'title': 'অতিরিক্ত জেলা ও দায়রা জজ আদালত, ঢাকা', 'sub': 'বিশেষ ট্রাইব্যুনাল নং-০৬, ঢাকা'},
-
-    // ৫ম তলা
     {'floor': '৫ম তলা', 'title': 'অতিরিক্ত জেলা ও দায়রা জজ ৬ষ্ঠ আদালত, ঢাকা', 'sub': 'বিশেষ ট্রাইব্যুনাল নং-০৭, ঢাকা (বিচারকক্ষ / এজলাস)'},
     {'floor': '৫ম তলা', 'title': 'অতিরিক্ত জেলা ও দায়রা জজ ৭ম আদালত, ঢাকা', 'sub': 'বিশেষ ট্রাইব্যুনাল নং-১৮, ঢাকা / গোপনীয় শাখা / স্টেনোগ্রাফার রুম'},
     {'floor': '৫ম তলা', 'title': 'অতিরিক্ত জেলা ও দায়রা জজ ৮ম আদালত, ঢাকা', 'sub': 'বিশেষ ট্রাইব্যুনাল নং-০৮, ঢাকা / বাণিজ্যিক আদালত-০৩, ঢাকা মহানগর'},
     {'floor': '৫ম তলা', 'title': 'অর্থঋণ আদালত নং-১, ঢাকা', 'sub': 'বিশেষ ট্রাইব্যুনাল নং-০৯, ঢাকা / এজলাস জজ অর্থঋণ আদালত নং-১'},
-
-    // ৬ষ্ঠ তলা
     {'floor': '৬ষ্ঠ তলা', 'title': 'অর্থঋণ আদালতসমূহ (নং-১ সেরেস্তা, নং-৫ এজলাস ও সেরেস্তা, নং-৬ এজলাস)', 'sub': 'অর্থঋণ শাখা'},
     {'floor': '৬ষ্ঠ তলা', 'title': 'কেরানীগঞ্জ অঞ্চল আদালতসমূহ (এজলাস সিভিল জজ, এজলাস সিনিয়র সিভিল জজ ও সেরেস্তা)', 'sub': 'সিনিয়র সহকারী জজ, কেরানীগঞ্জ থানা (ঢাকা সদর)'},
     {'floor': '৬ষ্ঠ তলা', 'title': 'ল্যান্ড সার্ভে আপীল ট্রাইব্যুনাল, ঢাকা (এজলাস)', 'sub': 'ল্যান্ড সার্ভে শাখা'},
     {'floor': '৬ষ্ঠ তলা', 'title': 'সহকারী জজ আদালত (৬ষ্ঠ সহকারী জজ, রুম নং-৬৩৭)', 'sub': 'সেরেস্তা সহকারী জজ / সিনিয়র সিভিল জজ / সিভিল জজ আদালত নং-৬'},
-
-    // ৭ম তলা
     {'floor': '৭ম তলা', 'title': 'যুগ্ম জেলা জজ অতিরিক্ত আদালত (সাবেক ৮ম ও ৬ষ্ঠ যুগ্ম জেলা জজ)', 'sub': 'এজলাস ও সেরেস্তা'},
     {'floor': '৭ম তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল (সংযুক্ত: দোহার এজলাস)', 'sub': 'বিচারিক ট্রাইব্যুনাল'},
     {'floor': '৭ম তলা', 'title': 'সিনিয়র সিভিল জজ আদালত-১, ঢাকা', 'sub': 'সিনিয়র সিভিল জজ ১ম আদালত এজলাস ও সেরেস্তা'},
     {'floor': '৭ম তলা', 'title': 'সিনিয়র সহকারী জজ, দোহার (সাবেক ৮) আদালত', 'sub': 'সেরেস্তা শাখা'},
     {'floor': '৭ম তলা', 'title': 'পারিবারিক আদালত নং ২, ঢাকা', 'sub': 'ফাইলিং ও এফিডেভিট স্থান (ধামরাই, সাভার ও আশুলিয়া অঞ্চল)'},
     {'floor': '৭ম তলা', 'title': 'সিনিয়র সহকারী জজ ধামরাই আদালত', 'sub': 'বেঞ্চের কার্যক্রম ও সেরেস্তা'},
-
-    // ৮ম তলা
     {'floor': '৮ম তলা', 'title': 'সিনিয়র সহকারী জজ, ২য় আদালত, ঢাকা', 'sub': 'এজলাস শাখা'},
     {'floor': '৮ম তলা', 'title': 'সিনিয়র সিভিল জজ ৩য় ও ৪র্থ আদালত, ঢাকা', 'sub': 'এজলাস ও সেরেস্তা'},
     {'floor': '৮ম তলা', 'title': 'সিনিয়র সিভিল জজ ২য় আদালত, ঢাকা', 'sub': 'সেরেস্তা শাখা'},
@@ -951,17 +1036,14 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
           'ঢাকা জেলা ও দায়রা জজ আদালত (নতুন ভবন)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
-            ),
+            color: const Color(0xFF0D1C2E),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -973,13 +1055,13 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
                       label: Text(
                         floor,
                         style: GoogleFonts.tiroBangla(
-                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          color: isSelected ? Colors.black : Colors.white,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFD4AF37),
-                      backgroundColor: const Color(0xFFF4F6F9),
+                      selectedColor: const Color(0xFFE2C475),
+                      backgroundColor: const Color(0xFF152A42),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -993,7 +1075,7 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
           ),
           Expanded(
             child: filteredCourts.isEmpty
-                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি', style: TextStyle(color: Colors.white)))
                 : ListView.builder(
                     padding: const EdgeInsets.all(14),
                     itemCount: filteredCourts.length,
@@ -1002,10 +1084,9 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF0D1C2E),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade200),
-                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
+                          border: Border.all(color: const Color(0xFF264C72)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -1015,8 +1096,9 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF0A192F),
+                                  color: const Color(0xFF152A42),
                                   borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
                                 ),
                                 child: Text(
                                   court['floor'],
@@ -1037,7 +1119,7 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
                                       style: GoogleFonts.tiroBangla(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF0A192F),
+                                        color: Colors.white,
                                       ),
                                     ),
                                     if (court.containsKey('sub')) ...[
@@ -1046,7 +1128,7 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
                                         court['sub'],
                                         style: GoogleFonts.tiroBangla(
                                           fontSize: 12,
-                                          color: Colors.grey.shade800,
+                                          color: Colors.white70,
                                           height: 1.4,
                                         ),
                                       ),
@@ -1067,7 +1149,7 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
   }
 }
 
-// ------------------- DISTRICT COURT OLD BUILDING (PDF 2) -------------------
+// ------------------- DISTRICT COURT OLD BUILDING -------------------
 
 class DistrictCourtOldBuildingScreen extends StatefulWidget {
   const DistrictCourtOldBuildingScreen({super.key});
@@ -1090,23 +1172,18 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
   ];
 
   final List<Map<String, dynamic>> courtData = [
-    // ১ম তলা
     {'floor': '১ম তলা', 'title': 'সিনিয়র সিভিল জজ ৪র্থ অতিরিক্ত আদালত, ঢাকা', 'sub': 'ধরন: দেওয়ানি আদালত'},
     {'floor': '১ম তলা', 'title': 'সিনিয়র সিভিল জজ আদালত-১৪, ঢাকা / সিনিয়র সহকারী জজ ৭ম আদালত (নবাবগঞ্জ), ঢাকা (পারিবারিক আদালত নং-০১)', 'sub': 'ধরন: দেওয়ানি ও পারিবারিক আদালত'},
     {'floor': '১ম তলা', 'title': 'নেজারত বিভাগ, জেলা জজ আদালত, ঢাকা', 'sub': 'ধরন: প্রশাসনিক শাখা দপ্তর'},
     {'floor': '১ম তলা', 'title': 'বিচার সেবা প্রাপ্তি সংক্রান্ত হেল্পলাইন, জেলা ও দায়রা জজ আদালত এবং চীফ জুডিসিয়াল ম্যাজিস্ট্রেট আদালত, ঢাকা', 'sub': 'ধরন: বিচার সেবা কেন্দ্র'},
     {'floor': '১ম তলা', 'title': 'মোঃ নাসির উদ্দীন (এডভোকেট), সরকারী কৌশুলী (জি.পি), জেলা ও দায়রা জজ আদালত, ঢাকা', 'sub': 'ধরন: জি.পি কার্যালয়'},
     {'floor': '১ম তলা', 'title': 'হিসাব রক্ষণ বিভাগ, জেলা জজ আদালত, ঢাকা', 'sub': 'ধরন: প্রশাসনিক শাখা দপ্তর'},
-
-    // ২য় তলা
     {'floor': '২য় তলা', 'title': 'অতিরিক্ত জেলা ও দায়রা জজ, ৪র্থ আদালত, ঢাকা এবং বিশেষ ট্রাইব্যুনাল কোর্ট নং-৫, ঢাকা (কক্ষ নং- ২৫)', 'sub': 'ধরন: ফৌজদারি ও বিশেষ এজলাস'},
     {'floor': '২য় তলা', 'title': 'বিশেষ জজ আদালত নং-৬, ঢাকা', 'sub': 'ধরন: বিশেষ জজ আদালত'},
     {'floor': '২য় তলা', 'title': 'এজলাস, দ্রুত বিচার ট্রাইব্যুনাল নং-৪, ঢাকা', 'sub': 'ধরন: দ্রুত বিচার ট্রাইব্যুনাল এজলাস'},
     {'floor': '২য় তলা', 'title': 'জননিরাপত্তা বিঘ্নকারী অপরাধ দমন ট্রাইব্যুনাল, ঢাকা', 'sub': 'ধরন: বিশেষ ট্রাইব্যুনাল'},
     {'floor': '২য় তলা', 'title': 'এজলাস, পরিবেশ আদালত, ঢাকা (কক্ষ নং- ৩১)', 'sub': 'ধরন: পরিবেশ আদালত এজলাস'},
     {'floor': '২য় তলা', 'title': 'পারিবারিক আদালত-৫, ঢাকা / ই-পারিবারিক আদালত', 'sub': 'ধরন: পারিবারিক আদালত এজলাস'},
-
-    // ৩য় তলা
     {'floor': '৩য় তলা', 'title': 'যুগ্ম জেলা জজ ১ম আদালত, ঢাকা', 'sub': 'ধরন: দেওয়ানি আদালত সেরেস্তা'},
     {'floor': '৩য় তলা', 'title': 'যুগ্ম জেলা জজ ১ম আদালত ও বিশেষ ট্রাইব্যুনাল নং-১৫, ঢাকা', 'sub': 'ধরন: দেওয়ানি ও বিশেষ এজলাস'},
     {'floor': '৩য় তলা', 'title': 'যুগ্ম জেলা জজ ২য় আদালত, ঢাকা', 'sub': 'ধরন: দেওয়ানি আদালত সেরেস্তা'},
@@ -1114,8 +1191,6 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
     {'floor': '৩য় তলা', 'title': 'অতিরিক্ত জেলা ও দায়রা জজ ৩য় আদালত ও বিশেষ ট্রাইব্যুনাল নং-৪, ঢাকা', 'sub': 'ধরন: ফৌজদারি ও দায়রা এজলাস'},
     {'floor': '৩য় তলা', 'title': 'যুগ্ম জেলা ও দায়রা জজ ৪র্থ আদালত / আরবিট্রেশন আদালত ও বিশেষ ট্রাইব্যুনাল নং-২১, ঢাকা', 'sub': 'ধরন: দেওয়ানি, আর্বিট্রেশন ও ট্রাইব্যুনাল এজলাস'},
     {'floor': '৩য় তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল নং-৪, ঢাকা', 'sub': 'ধরন: নারী ও শিশু ট্রাইব্যুনাল'},
-
-    // ৪র্থ তলা
     {'floor': '৪র্থ তলা', 'title': 'যুগ্ম জেলা জজ ৩য় আদালত, ঢাকা', 'sub': 'ধরন: দেওয়ানি আদালত সেরেস্তা'},
     {'floor': '৪র্থ তলা', 'title': 'যুগ্ম জেলা জজ ৩য় আদালত ও বিশেষ ট্রাইব্যুনাল নং-১৭, ঢাকা', 'sub': 'ধরন: দেওয়ানি ও বিশেষ এজলাস'},
     {'floor': '৪র্থ তলা', 'title': 'যুগ্ম জেলা জজ ৪র্থ আদালত, ঢাকা', 'sub': 'ধরন: দেওয়ানি আদালত সেরেস্তা'},
@@ -1123,8 +1198,6 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
     {'floor': '৪র্থ তলা', 'title': 'যুগ্ম জেলা জজ ৫ম আদালত ও বিশেষ ট্রাইব্যুনাল নং-১১, ঢাকা', 'sub': 'ধরন: দেওয়ানি ও বিশেষ এজলাস'},
     {'floor': '৪র্থ তলা', 'title': 'যুগ্ম জেলা জজ ও অর্থঋণ আদালত নং-২, ঢাকা', 'sub': 'ধরন: অর্থঋণ আদালত সেরেস্তা'},
     {'floor': '৪র্থ তলা', 'title': 'যুগ্ম জেলা জজ ও অর্থঋণ আদালত নং-২ ও বিশেষ ট্রাইব্যুনাল নং-১৮, ঢাকা', 'sub': 'ধরন: অর্থঋণ ও বিশেষ এজলাস'},
-
-    // ৫ম তলা
     {'floor': '৫ম তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল নং-০২, ঢাকা', 'sub': 'ধরন: এজলাস ও সেরেস্তা'},
     {'floor': '৫ম তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল-৩, ঢাকা ও শিশু আদালত-৩, ঢাকা', 'sub': 'ধরন: এজলাস ও সেরেস্তা'},
     {'floor': '৫ম তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল নং-৮, ঢাকা', 'sub': 'ধরন: এজলাস ও সেরেস্তা'},
@@ -1132,8 +1205,6 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
     {'floor': '৫ম তলা', 'title': 'যুগ্ম জেলা জজ, অর্থঋণ আদালত নং-৩, ঢাকা', 'sub': 'ধরন: অর্থঋণ আদালত এজলাস'},
     {'floor': '৫ম তলা', 'title': 'ল্যান্ড সার্ভে ট্রাইব্যুনাল, ঢাকা মহানগর, ঢাকা (বিচারক)', 'sub': 'ধরন: ল্যান্ড সার্ভে এজলাস'},
     {'floor': '৫ম তলা', 'title': 'ল্যান্ড সার্ভে ট্রাইব্যুনাল, ঢাকা', 'sub': 'ধরন: ল্যান্ড সার্ভে সেরেস্তা'},
-
-    // ৬ষ্ঠ তলা
     {'floor': '৬ষ্ঠ তলা', 'title': '১ম অতিরিক্ত সিভিল জজ আদালত, ঢাকা', 'sub': 'ধরন: দেওয়ানি আদালত এজলাস'},
     {'floor': '৬ষ্ঠ তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল ও শিশু আদালত-৬, ঢাকা', 'sub': 'ধরন: এজলাস ও সেরেস্তা'},
     {'floor': '৬ষ্ঠ তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল-৭, ঢাকা', 'sub': 'ধরন: এজলাস ও সেরেস্তা'},
@@ -1155,17 +1226,14 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
           'জেলা ও দায়রা জজ আদালত (পুরাতন বিল্ডিং)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
-            ),
+            color: const Color(0xFF0D1C2E),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1177,13 +1245,13 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
                       label: Text(
                         floor,
                         style: GoogleFonts.tiroBangla(
-                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          color: isSelected ? Colors.black : Colors.white,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFD4AF37),
-                      backgroundColor: const Color(0xFFF4F6F9),
+                      selectedColor: const Color(0xFFE2C475),
+                      backgroundColor: const Color(0xFF152A42),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -1197,7 +1265,7 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
           ),
           Expanded(
             child: filteredCourts.isEmpty
-                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি', style: TextStyle(color: Colors.white)))
                 : ListView.builder(
                     padding: const EdgeInsets.all(14),
                     itemCount: filteredCourts.length,
@@ -1206,10 +1274,9 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF0D1C2E),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade200),
-                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
+                          border: Border.all(color: const Color(0xFF264C72)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -1219,8 +1286,9 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF0A192F),
+                                  color: const Color(0xFF152A42),
                                   borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
                                 ),
                                 child: Text(
                                   court['floor'],
@@ -1241,7 +1309,7 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
                                       style: GoogleFonts.tiroBangla(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF0A192F),
+                                        color: Colors.white,
                                       ),
                                     ),
                                     if (court.containsKey('sub')) ...[
@@ -1250,7 +1318,7 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
                                         court['sub'],
                                         style: GoogleFonts.tiroBangla(
                                           fontSize: 12,
-                                          color: Colors.grey.shade800,
+                                          color: Colors.white70,
                                           height: 1.4,
                                         ),
                                       ),
@@ -1271,7 +1339,7 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
   }
 }
 
-// ------------------- REBOTI MANSION SCREEN (PDF 3) -------------------
+// ------------------- REBOTI MANSION SCREEN -------------------
 
 class RebotiMansionScreen extends StatefulWidget {
   const RebotiMansionScreen({super.key});
@@ -1291,19 +1359,14 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
   ];
 
   final List<Map<String, dynamic>> courtData = [
-    // নিচ তলা
     {'floor': 'নিচ তলা', 'title': 'বিচারপ্রার্থী নারী ও শিশু বিশ্রামাগার, ঢাকা', 'sub': 'বিভাগ / ধরন: বিশ্রামাগার ও সেবা (নাগরিক সেবা)'},
     {'floor': 'নিচ তলা', 'title': 'পাবলিক প্রসিকিউটর এর কার্যালয়, দুর্নীতি দমন কমিশন (দুদক)', 'sub': 'বিভাগ / ধরন: বিশেষায়িত কার্যালয় (দুদক প্রসিকিউশন)'},
     {'floor': 'নিচ তলা', 'title': 'পিপি অফিস (পাবলিক প্রসিকিউটর অফিস), ঢাকা', 'sub': 'বিভাগ / ধরন: সরকারি কার্যালয় (জেলা প্রসিকিউশন)'},
     {'floor': 'নিচ তলা', 'title': 'মেট্রোপলিটন পাবলিক প্রসিকিউটর (পি.পি) কার্যালয়, ঢাকা', 'sub': 'বিভাগ / ধরন: সরকারি কার্যালয় (মহানগর প্রসিকিউশন)'},
-
-    // ২য় তলা
     {'floor': '২য় তলা', 'title': 'সিনিয়র সিভিল জজ আদালত, সাভার, ঢাকা', 'sub': 'বিভাগ / অবস্থান: এজলাস ও সেরেস্তা (এজলাস + সেরেস্তা)'},
     {'floor': '২য় তলা', 'title': 'বিশেষ জজ আদালত নং-৮, ঢাকা', 'sub': 'বিভাগ / অবস্থান: এজলাস ও সেরেস্তা (এজলাস + সেরেস্তা)'},
     {'floor': '২য় তলা', 'title': 'বিশেষ জজ আদালত নং-০৯, ঢাকা', 'sub': 'বিভাগ / অবস্থান: এজলাস ও সেরেস্তা (এজলাস + সেরেস্তা)'},
     {'floor': '২য় তলা', 'title': 'বিশেষ জজ আদালত নং-১০, ঢাকা', 'sub': 'বিভাগ / অবস্থান: এজলাস ও সেরেস্তা (এজলাস + সেরেস্তা)'},
-
-    // ৩য় তলা
     {'floor': '৩য় তলা', 'title': 'বিশেষ জজ আদালত নং-৭, ঢাকা', 'sub': 'বিভাগ / অবস্থান: এজলাস ও সেরেস্তা (এজলাস + সেরেস্তা)'},
     {'floor': '৩য় তলা', 'title': 'নারী ও শিশু নির্যাতন দমন ট্রাইব্যুনাল-১, ঢাকা', 'sub': 'বিভাগ / অবস্থান: ট্রাইব্যুনাল এজলাস (বিচারিক এজলাস)'},
   ];
@@ -1320,17 +1383,14 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
           'রেবতী ম্যানশন (জেলা ও দায়রা জজ আদালত)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
-            ),
+            color: const Color(0xFF0D1C2E),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1342,13 +1402,13 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
                       label: Text(
                         floor,
                         style: GoogleFonts.tiroBangla(
-                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          color: isSelected ? Colors.black : Colors.white,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFD4AF37),
-                      backgroundColor: const Color(0xFFF4F6F9),
+                      selectedColor: const Color(0xFFE2C475),
+                      backgroundColor: const Color(0xFF152A42),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -1362,7 +1422,7 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
           ),
           Expanded(
             child: filteredCourts.isEmpty
-                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি', style: TextStyle(color: Colors.white)))
                 : ListView.builder(
                     padding: const EdgeInsets.all(14),
                     itemCount: filteredCourts.length,
@@ -1371,10 +1431,9 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF0D1C2E),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade200),
-                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
+                          border: Border.all(color: const Color(0xFF264C72)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -1384,8 +1443,9 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF0A192F),
+                                  color: const Color(0xFF152A42),
                                   borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
                                 ),
                                 child: Text(
                                   court['floor'],
@@ -1406,7 +1466,7 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
                                       style: GoogleFonts.tiroBangla(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF0A192F),
+                                        color: Colors.white,
                                       ),
                                     ),
                                     if (court.containsKey('sub')) ...[
@@ -1415,7 +1475,7 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
                                         court['sub'],
                                         style: GoogleFonts.tiroBangla(
                                           fontSize: 12,
-                                          color: Colors.grey.shade800,
+                                          color: Colors.white70,
                                           height: 1.4,
                                         ),
                                       ),
@@ -1431,66 +1491,6 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
                   ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ------------------- SUB CATEGORY SCREEN -------------------
-
-class SubCategoryScreen extends StatelessWidget {
-  final String title;
-  final List<String> items;
-
-  const SubCategoryScreen({
-    super.key,
-    required this.title,
-    required this.items,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title, style: GoogleFonts.tiroBangla(color: Colors.white)),
-        backgroundColor: const Color(0xFF0A192F),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return Card(
-            elevation: 2,
-            margin: const EdgeInsets.only(bottom: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(15),
-              leading: const CircleAvatar(
-                backgroundColor: Color(0xFFD4AF37),
-                child: Icon(Icons.stairs_rounded, color: Colors.white),
-              ),
-              title: Text(
-                items[index],
-                style: GoogleFonts.tiroBangla(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: const Color(0xFF0A192F),
-                ),
-              ),
-              subtitle: const Text('তলার তালিকা দেখতে ক্লিক করুন'),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CourtDetailsScreen(courtName: items[index]),
-                  ),
-                );
-              },
-            ),
-          );
-        },
       ),
     );
   }
@@ -1575,17 +1575,14 @@ class _MetropolitanSessionsCourtScreenState
           'মহানগর দায়রা জজ আদালত',
           style: GoogleFonts.tiroBangla(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
-            ),
+            color: const Color(0xFF0D1C2E),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1597,13 +1594,13 @@ class _MetropolitanSessionsCourtScreenState
                       label: Text(
                         floor,
                         style: GoogleFonts.tiroBangla(
-                          color: isSelected ? const Color(0xFF0A192F) : Colors.black87,
+                          color: isSelected ? Colors.black : Colors.white,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFD4AF37),
-                      backgroundColor: const Color(0xFFF4F6F9),
+                      selectedColor: const Color(0xFFE2C475),
+                      backgroundColor: const Color(0xFF152A42),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -1617,7 +1614,7 @@ class _MetropolitanSessionsCourtScreenState
           ),
           Expanded(
             child: filteredCourts.isEmpty
-                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি'))
+                ? const Center(child: Text('কোন তথ্য পাওয়া যায়নি', style: TextStyle(color: Colors.white)))
                 : ListView.builder(
                     padding: const EdgeInsets.all(14),
                     itemCount: filteredCourts.length,
@@ -1626,10 +1623,9 @@ class _MetropolitanSessionsCourtScreenState
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF0D1C2E),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade200),
-                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
+                          border: Border.all(color: const Color(0xFF264C72)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -1641,8 +1637,9 @@ class _MetropolitanSessionsCourtScreenState
                                 decoration: BoxDecoration(
                                   color: court['floor'] == 'টিন শেড'
                                       ? Colors.orange.shade800
-                                      : const Color(0xFF0A192F),
+                                      : const Color(0xFF152A42),
                                   borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
                                 ),
                                 child: Text(
                                   court['floor'],
@@ -1663,7 +1660,7 @@ class _MetropolitanSessionsCourtScreenState
                                       style: GoogleFonts.tiroBangla(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFF0A192F),
+                                        color: Colors.white,
                                       ),
                                     ),
                                     if (court.containsKey('sub')) ...[
@@ -1671,15 +1668,15 @@ class _MetropolitanSessionsCourtScreenState
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFD4AF37).withOpacity(0.15),
+                                          color: const Color(0xFFE2C475).withOpacity(0.15),
                                           borderRadius: BorderRadius.circular(6),
-                                          border: Border.all(color: const Color(0xFFD4AF37), width: 0.5),
+                                          border: Border.all(color: const Color(0xFFE2C475), width: 0.5),
                                         ),
                                         child: Text(
                                           court['sub'],
                                           style: GoogleFonts.tiroBangla(
                                             fontSize: 12,
-                                            color: const Color(0xFF0A192F),
+                                            color: const Color(0xFFE2C475),
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -1713,7 +1710,7 @@ class CourtDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(courtName, style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16)),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
@@ -1721,7 +1718,7 @@ class CourtDetailsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.construction, size: 80, color: Color(0xFFD4AF37)),
+            const Icon(Icons.construction, size: 80, color: Color(0xFFE2C475)),
             const SizedBox(height: 20),
             Text(
               courtName,
@@ -1729,21 +1726,21 @@ class CourtDetailsScreen extends StatelessWidget {
               style: GoogleFonts.tiroBangla(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF0A192F),
+                color: Colors.white,
               ),
             ),
             const SizedBox(height: 15),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFF0D1C2E),
                 borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: const Color(0xFF264C72)),
               ),
               child: const Text(
                 'এই বিল্ডিংয়ের রুম এবং তলা সংক্রান্ত বিস্তারিত ডাটা শীঘ্রই যুক্ত করা হবে। আপনি আপনার কাছে থাকা তথ্য প্রদান করলে তা এখানে ডাইনামিকালি সাজিয়ে দেওয়া হবে।',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+                style: TextStyle(fontSize: 14, color: Colors.white70, height: 1.5),
               ),
             ),
           ],
@@ -1834,7 +1831,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Google Gemini আইনি সহকারী', style: GoogleFonts.tiroBangla(color: Colors.white)),
-        backgroundColor: const Color(0xFF0A192F),
+        backgroundColor: const Color(0xFF071220),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
@@ -1851,16 +1848,16 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
                     margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: isUser ? const Color(0xFF0A192F) : Colors.white,
+                      color: isUser ? const Color(0xFF152A42) : const Color(0xFF0D1C2E),
                       borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)
-                      ],
+                      border: Border.all(
+                        color: isUser ? const Color(0xFF4EE8FF) : const Color(0xFF264C72),
+                      ),
                     ),
                     child: Text(
                       _messages[index]["text"]!,
                       style: TextStyle(
-                        color: isUser ? Colors.white : Colors.black87,
+                        color: isUser ? Colors.white : Colors.white70,
                         fontSize: 14,
                       ),
                     ),
@@ -1872,25 +1869,27 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
           if (_isLoading)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: LinearProgressIndicator(color: Color(0xFFD4AF37)),
+              child: LinearProgressIndicator(color: Color(0xFFE2C475)),
             ),
           Container(
             padding: const EdgeInsets.all(12),
-            color: Colors.white,
+            color: const Color(0xFF0D1C2E),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: _promptController,
+                    style: const TextStyle(color: Colors.white),
                     onSubmitted: (_) => _sendMessage(),
                     decoration: const InputDecoration(
                       hintText: 'আইন বা কোর্ট বিষয়ক যেকোনো প্রশ্ন লিখুন...',
+                      hintStyle: TextStyle(color: Colors.white38),
                       border: InputBorder.none,
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send, color: Color(0xFFD4AF37)),
+                  icon: const Icon(Icons.send, color: Color(0xFFE2C475)),
                   onPressed: _sendMessage,
                 ),
               ],
