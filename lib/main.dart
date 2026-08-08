@@ -1872,7 +1872,7 @@ class CourtDetailsScreen extends StatelessWidget {
                 child: Text(
                   'এই বিল্ডিংয়ের রুম এবং তলা সংক্রান্ত বিস্তারিত ডাটা শীঘ্রই যুক্ত করা হবে।',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.white87, height: 1.5),
+                  style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.87), height: 1.5),
                 ),
               ),
             ),
