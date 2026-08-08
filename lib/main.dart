@@ -170,9 +170,9 @@ class _SplashScreenState extends State<SplashScreen> {
                             ),
                             child: const Text(
                               'BREAKING',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.black,
+                               style: TextStyle(
+                               fontWeight: FontWeight.w900, // ✅ এটি সঠিক (Black Weight)
+),
                                 fontSize: 13,
                                 letterSpacing: 1.1,
                               ),
