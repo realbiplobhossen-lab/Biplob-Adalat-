@@ -1,4 +1,4 @@
-name: biplob_adalat
+name: Biplob Dhaka Court 
 description: Biplob Adalat - Court location finder and legal AI assistant.
 publish_to: 'none'
 version: 1.0.0+1
@@ -19,4 +19,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  
+
+  # ছবিগুলোর পাথ অ্যাপে রেজিস্টার করা হলো
+  assets:
+    - assets/images/profile.jpg
+    - assets/images/splash.jpg
+    - assets/images/app_icon.png
+    
