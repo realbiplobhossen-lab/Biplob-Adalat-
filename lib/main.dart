@@ -14,21 +14,23 @@ class BiplobAdalatApp extends StatelessWidget {
     return MaterialApp(
       title: 'Biplob Adalat',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF071220), // ছবির মতো গাঢ় নীল ব্যাকগ্রাউন্ড
-        primaryColor: const Color(0xFF071220),
-        colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF4EE8FF), // Neon cyan accent
-          secondary: Color(0xFFE2C475), // Gold accent
+      theme: ThemeData(
+        useMaterial3: true,
+        primaryColor: const Color(0xFF031327),
+        scaffoldBackgroundColor: const Color(0xFF031327),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF031327),
+          primary: const Color(0xFF031327),
+          secondary: const Color(0xFF5CE1E6),
         ),
-        textTheme: GoogleFonts.tiroBanglaTextTheme(ThemeData.dark().textTheme),
+        textTheme: GoogleFonts.tiroBanglaTextTheme(Theme.of(context).textTheme),
       ),
       home: const MainHomeScreen(),
     );
   }
 }
 
-// ------------------- MAIN HOME SCREEN (হুবহু ছবির ডিজাইন) -------------------
+// ------------------- MAIN HOME SCREEN -------------------
 
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({super.key});
@@ -43,318 +45,477 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF060E18),
-          image: DecorationImage(
-            image: AssetImage('assets/bg.png'), // সাইবার ব্যাকগ্রাউন্ড ইমেজ
-            fit: BoxFit.cover,
-            alignment: Alignment.center,
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-            child: Column(
-              children: [
-                // ১. প্রোফাইল কার্ড (ছবি ও বিস্তারিত তথ্য)
-                _buildProfileHeaderCard(),
-                const SizedBox(height: 15),
+      backgroundColor: const Color(0xFF031327),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Circuit board background graphics emulation
+            Positioned.fill(
+              child: CustomPaint(
+                painter: CircuitBackgroundPainter(),
+              ),
+            ),
+            SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 90),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  // Top Profile Section
+                  _buildProfileHeader(),
 
-                // ২. অ্যাপ টাইটেল ও AI আইকন
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(width: 32), // Balance center alignment
-                    Expanded(
-                      child: Text(
+                  const SizedBox(height: 15),
+
+                  // App Title "Biplob Adalat"
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 40), // Spacer for center balance
+                      Text(
                         'Biplob Adalat',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.tiroBangla(
+                        style: GoogleFonts.cinzel(
                           color: Colors.white,
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.1,
                         ),
                       ),
+                      const SizedBox(width: 15),
+                      IconButton(
+                        icon: const Icon(Icons.psychology, color: Color(0xFFD4AF37), size: 30),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const GeminiAIScreen()),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF132A4A).withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: const Color(0xFF1D4D75), width: 1),
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: 'কোর্ট বা রুম নম্বর খুঁজুন...',
+                          hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+                          prefixIcon: const Icon(Icons.search, color: Color(0xFFC29B38), size: 26),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                      ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.psychology, color: Color(0xFFE2C475), size: 28),
-                      onPressed: () {
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // Golden Subtitle Banner
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: CyberBorderContainer(
+                      borderColor: const Color(0xFFC29B38),
+                      fillColor: const Color(0xFF031327),
+                      strokeWidth: 1.5,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.gavel_rounded, color: Color(0xFFC29B38), size: 24),
+                            const SizedBox(width: 10),
+                            const Expanded(
+                              child: Text(
+                                'আইনজীবী ও বিচারপ্রার্থীদের জন্য দ্রুত কোর্ট ট্র্যাকিং সমাধান',
+                                style: TextStyle(
+                                  color: Color(0xFFE0C872),
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // 4 Main Category Cards
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: [
+                        _buildCategoryCard(
+                          title: 'ম্যাজিস্ট্রেট কোর্ট',
+                          subtitle: 'CMM, CJM এবং নির্বাহী ম্যাজিস্ট্রেট কোর্টের তালিকা',
+                          icon: Icons.gavel,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const MagistrateCourtMenuScreen()),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        _buildCategoryCard(
+                          title: 'মহানগর দায়রা জজ আদালত',
+                          subtitle: 'ভবন ও টিন শেড-এর ফ্লোর ভিত্তিক সকল কোর্ট',
+                          icon: Icons.gavel,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const MetropolitanSessionsCourtScreen()),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        _buildCategoryCard(
+                          title: 'জেলা ও দায়রা জজ আদালত',
+                          subtitle: 'নতুন ও পুরাতন বিল্ডিং ভবন',
+                          icon: Icons.apartment,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DistrictCourtMenuScreen()),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        _buildCategoryCard(
+                          title: 'রেবতী ম্যানশন, জেলা জজ আদালত',
+                          subtitle: 'রেবতী ম্যানশনের সংশ্লিষ্ট সকল কোর্টসমূহ',
+                          icon: Icons.apartment,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const RebotiMansionScreen()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Bottom Floating Gold "Need any Help" Button
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: CyberBorderContainer(
+                  borderColor: const Color(0xFF5CE1E6),
+                  fillColor: const Color(0xFFC29B38),
+                  cutSize: 10,
+                  strokeWidth: 2,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const GeminiAIScreen()),
                         );
                       },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.auto_awesome, color: Colors.black, size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Need any Help',
+                              style: GoogleFonts.cinzel(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Profile Header Card Design
+  Widget _buildProfileHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: CyberBorderContainer(
+        borderColor: const Color(0xFF5CE1E6),
+        fillColor: const Color(0xFF051D38).withOpacity(0.6),
+        strokeWidth: 1.5,
+        cutSize: 12,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              // Profile Photo frame
+              Container(
+                width: 100,
+                height: 110,
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF5CE1E6), width: 1.5),
+                  borderRadius: BorderRadius.circular(4),
+                  image: const DecorationImage(
+                    image: NetworkImage('https://i.ibb.co/6y4f3Z7/profile.png'), // Replace with image asset
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  color: Colors.blueGrey.withOpacity(0.2), // Fallback visual
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Info Text
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Biplob Hossen',
+                      style: GoogleFonts.cinzel(
+                        color: const Color(0xFFE0C872),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const Text(
+                      'LL.B (Hon\'s), LL.M\nApprentice Lawyer,\nDhaka Judge Court.',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11.5,
+                        height: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Email: biplobdiu67@gmail.com\nWhatsApp: 01757700054',
+                      style: TextStyle(
+                        color: Colors.white60,
+                        fontSize: 10,
+                        height: 1.2,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 15),
-
-                // ৩. সার্চ বার
-                TextField(
-                  controller: _searchController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: 'কোর্ট বা রুম নম্বর খুঁজুন...',
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-                    prefixIcon: const Icon(Icons.search, color: Color(0xFFE2C475), size: 24),
-                    filled: true,
-                    fillColor: const Color(0xFF101E31).withOpacity(0.8),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Color(0xFF1F3858), width: 1.5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Color(0xFF4EE8FF), width: 1.5),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15),
-
-                // ৪. স্লোগান ব্যানার
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF101E31).withOpacity(0.85),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xFFE2C475), width: 1),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.gavel_rounded, color: Color(0xFFE2C475), size: 26),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'আইনজীবী ও বিচারপ্রার্থীদের জন্য দ্রুত কোর্ট ট্র্যাকিং সমাধান',
-                          style: GoogleFonts.tiroBangla(
-                            color: Colors.white,
-                            fontSize: 13,
-                            height: 1.2,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // ৫. মূল ক্যাটাগরি বাটনসমূহ (৪টিCyber Frame)
-                _buildCyberCategoryCard(
-                  title: 'ম্যাজিস্ট্রেট কোর্ট',
-                  subtitle: 'CMM, CJM এবং নির্বাহী ম্যাজিস্ট্রেট কোর্টের তালিকা',
-                  icon: Icons.gavel_outlined,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MagistrateCourtMenuScreen(),
-                      ),
-                    );
-                  },
-                ),
-                _buildCyberCategoryCard(
-                  title: 'মহানগর দায়রা জজ আদালত',
-                  subtitle: 'ভবন ও টিন শেড-এর ফ্লোর ভিত্তিক সকল কোর্ট',
-                  icon: Icons.gavel_rounded,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MetropolitanSessionsCourtScreen(),
-                      ),
-                    );
-                  },
-                ),
-                _buildCyberCategoryCard(
-                  title: 'জেলা ও দায়রা জজ আদালত',
-                  subtitle: 'নতুন ও পুরাতন বিল্ডিং ভবন',
-                  icon: Icons.business_rounded,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DistrictCourtMenuScreen(),
-                      ),
-                    );
-                  },
-                ),
-                _buildCyberCategoryCard(
-                  title: 'রেবতী ম্যানশন, জেলা জজ আদালত',
-                  subtitle: 'রেবতী ম্যানশনের সংশ্লিষ্ট সকল কোর্টসমূহ',
-                  icon: Icons.location_city_rounded,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RebotiMansionScreen(),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-
-                // ৬. Need Any Help বাটন
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const GeminiAIScreen()),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD3B35A),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white70, width: 1.5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFD3B35A).withOpacity(0.3),
-                          blurRadius: 8,
-                        )
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.auto_awesome, color: Colors.black87, size: 20),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Need any Help',
-                          style: GoogleFonts.tiroBangla(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  // প্রোফাইল কার্ড হেডার (সাইবার বর্ডার সহ)
-  Widget _buildProfileHeaderCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF0C1B2C).withOpacity(0.85),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF4EE8FF), width: 1.2),
-      ),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // টাই পরা প্রোফাইল পিকচার
-          Container(
-            width: 100,
-            height: 110,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFF4EE8FF), width: 1),
-              image: const DecorationImage(
-                image: AssetImage('assets/profile.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // এডভোকেট তথ্য
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Biplob Hossen',
-                  style: GoogleFonts.tiroBangla(
-                    color: const Color(0xFFE2C475),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                const Text(
-                  'LL.B (Hon\'s), LL.M',
-                  style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500),
-                ),
-                const Text(
-                  'Apprentice Lawyer,',
-                  style: TextStyle(color: Colors.white70, fontSize: 11),
-                ),
-                const Text(
-                  'Dhaka Judge Court.',
-                  style: TextStyle(color: Colors.white70, fontSize: 11),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Email: biplobdiu67@gmail.com',
-                  style: TextStyle(color: Colors.white60, fontSize: 10),
-                ),
-                const Text(
-                  'WhatsApp: 01757700054',
-                  style: TextStyle(color: Colors.white60, fontSize: 10),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // সাইবার ফ্রেম ক্যাটাগরি কার্ড
-  Widget _buildCyberCategoryCard({
+  // Cyber styled Category Card Widget
+  Widget _buildCategoryCard({
     required String title,
     required String subtitle,
     required IconData icon,
     required VoidCallback onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0D1C2E).withOpacity(0.85),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF264C72), width: 1.2),
-      ),
-      child: ListTile(
+    return CyberBorderContainer(
+      borderColor: const Color(0xFF5CE1E6),
+      fillColor: const Color(0xFF051E3C).withOpacity(0.85),
+      cutSize: 12,
+      strokeWidth: 1.5,
+      child: InkWell(
         onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        leading: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: const Color(0xFF152A42),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFF4EE8FF), width: 1),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          child: Row(
+            children: [
+              CyberBorderContainer(
+                borderColor: const Color(0xFF5CE1E6),
+                fillColor: Colors.transparent,
+                cutSize: 6,
+                strokeWidth: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Icon(icon, color: Colors.white, size: 28),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.tiroBangla(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Colors.white60,
+                        fontSize: 11.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Color(0xFFC29B38),
+                size: 20,
+              ),
+            ],
           ),
-          child: Icon(icon, color: Colors.white, size: 26),
         ),
-        title: Text(
-          title,
-          style: GoogleFonts.tiroBangla(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: const TextStyle(color: Colors.white60, fontSize: 11),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFFE2C475), size: 18),
       ),
     );
   }
+}
+
+// ------------------- CUSTOM CYBER SHAPE CONTAINER -------------------
+
+class CyberBorderContainer extends StatelessWidget {
+  final Widget child;
+  final Color borderColor;
+  final Color fillColor;
+  final double cutSize;
+  final double strokeWidth;
+
+  const CyberBorderContainer({
+    super.key,
+    required this.child,
+    this.borderColor = const Color(0xFF5CE1E6),
+    this.fillColor = const Color(0xFF031327),
+    this.cutSize = 10,
+    this.strokeWidth = 1.5,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _CyberBorderPainter(
+        borderColor: borderColor,
+        fillColor: fillColor,
+        cutSize: cutSize,
+        strokeWidth: strokeWidth,
+      ),
+      child: child,
+    );
+  }
+}
+
+class _CyberBorderPainter extends CustomPainter {
+  final Color borderColor;
+  final Color fillColor;
+  final double cutSize;
+  final double strokeWidth;
+
+  _CyberBorderPainter({
+    required this.borderColor,
+    required this.fillColor,
+    required this.cutSize,
+    required this.strokeWidth,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final fillPaint = Paint()
+      ..color = fillColor
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+
+    final path = Path();
+    path.moveTo(cutSize, 0);
+    path.lineTo(size.width - cutSize, 0);
+    path.lineTo(size.width, cutSize);
+    path.lineTo(size.width, size.height - cutSize);
+    path.lineTo(size.width - cutSize, size.height);
+    path.lineTo(cutSize, size.height);
+    path.lineTo(0, size.height - cutSize);
+    path.lineTo(0, cutSize);
+    path.close();
+
+    canvas.drawPath(path, fillPaint);
+    canvas.drawPath(path, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+// ------------------- BACKGROUND CIRCUIT DESIGN -------------------
+
+class CircuitBackgroundPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF0E385D).withOpacity(0.4)
+      ..strokeWidth = 1.2
+      ..style = PaintingStyle.stroke;
+
+    final dotPaint = Paint()
+      ..color = const Color(0xFF5CE1E6).withOpacity(0.5)
+      ..style = PaintingStyle.fill;
+
+    // Drawing circuit line decorations along edges
+    final path = Path();
+
+    // Top left circuit
+    path.moveTo(10, 80);
+    path.lineTo(50, 80);
+    path.lineTo(80, 110);
+
+    // Top right circuit
+    path.moveTo(size.width - 10, 80);
+    path.lineTo(size.width - 50, 80);
+    path.lineTo(size.width - 80, 110);
+
+    // Left side circuit
+    path.moveTo(0, 300);
+    path.lineTo(30, 300);
+    path.lineTo(50, 320);
+    path.lineTo(50, 400);
+
+    // Right side circuit
+    path.moveTo(size.width, 450);
+    path.lineTo(size.width - 30, 450);
+    path.lineTo(size.width - 50, 470);
+
+    canvas.drawPath(path, paint);
+
+    // Circuit Dots
+    canvas.drawCircle(const Offset(80, 110), 3, dotPaint);
+    canvas.drawCircle(Offset(size.width - 80, 110), 3, dotPaint);
+    canvas.drawCircle(const Offset(50, 400), 3, dotPaint);
+    canvas.drawCircle(Offset(size.width - 50, 470), 3, dotPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 // ------------------- MAGISTRATE COURT MENU SCREEN -------------------
@@ -370,7 +531,7 @@ class MagistrateCourtMenuScreen extends StatelessWidget {
           'ম্যাজিস্ট্রেট কোর্ট',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 20),
         ),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ListView(
@@ -422,23 +583,20 @@ class MagistrateCourtMenuScreen extends StatelessWidget {
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF0D1C2E),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF264C72)),
-      ),
+    return CyberBorderContainer(
+      borderColor: const Color(0xFF5CE1E6),
+      fillColor: const Color(0xFF051E3C),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: const Color(0xFFE2C475),
-            borderRadius: BorderRadius.circular(12),
+            color: const Color(0xFFC29B38),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: const Icon(
             Icons.stairs_rounded,
-            color: Colors.black,
+            color: Colors.white,
             size: 28,
           ),
         ),
@@ -503,7 +661,7 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
     {'floor': '৯ম তলা', 'title': 'কোর্ট নং-২৩, ২৪, ২৫, ২৬', 'sub': 'সি.এম.এম কোর্ট, ঢাকা'},
   ];
 
- @override
+  @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> filteredCourts = selectedFloor == 'সব ফ্লোর'
         ? cmmData
@@ -515,14 +673,14 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
           'চিফ মেট্রোপলিটন ম্যাজিস্ট্রেট কোর্ট (CMM)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            color: const Color(0xFF0D1C2E),
+            decoration: const BoxDecoration(color: Color(0xFF051E3C)),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -539,8 +697,8 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFE2C475),
-                      backgroundColor: const Color(0xFF152A42),
+                      selectedColor: const Color(0xFFC29B38),
+                      backgroundColor: const Color(0xFF031327),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -562,60 +720,58 @@ class _CMMCourtScreenState extends State<CMMCourtScreen> {
                       final court = filteredCourts[index];
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0D1C2E),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF264C72)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF152A42),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
-                                ),
-                                child: Text(
-                                  court['floor'],
-                                  style: GoogleFonts.tiroBangla(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                        child: CyberBorderContainer(
+                          borderColor: const Color(0xFF5CE1E6),
+                          fillColor: const Color(0xFF051E3C),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFC29B38),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    court['floor'],
+                                    style: GoogleFonts.tiroBangla(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      court['title'],
-                                      style: GoogleFonts.tiroBangla(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    if (court.containsKey('sub')) ...[
-                                      const SizedBox(height: 6),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                                       Text(
-                                        court['sub'],
+                                        court['title'],
                                         style: GoogleFonts.tiroBangla(
-                                          fontSize: 12,
-                                          color: Colors.white70,
-                                          height: 1.4,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
                                         ),
                                       ),
+                                      if (court.containsKey('sub')) ...[
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          court['sub'],
+                                          style: GoogleFonts.tiroBangla(
+                                            fontSize: 12,
+                                            color: Colors.white70,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ],
                                     ],
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -727,14 +883,14 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
           'চিফ জুডিশিয়াল ম্যাজিস্ট্রেট আদালত (CJM)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 18),
         ),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            color: const Color(0xFF0D1C2E),
+            decoration: const BoxDecoration(color: Color(0xFF051E3C)),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -751,8 +907,8 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFE2C475),
-                      backgroundColor: const Color(0xFF152A42),
+                      selectedColor: const Color(0xFFC29B38),
+                      backgroundColor: const Color(0xFF031327),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -774,82 +930,80 @@ class _CJMCourtScreenState extends State<CJMCourtScreen> {
                       final court = filteredCourts[index];
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0D1C2E),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF264C72)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF152A42),
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
-                                    ),
-                                    child: Text(
-                                      court['floor'],
-                                      style: GoogleFonts.tiroBangla(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  if (court.containsKey('room')) ...[
-                                    const SizedBox(height: 6),
+                        child: CyberBorderContainer(
+                          borderColor: const Color(0xFF5CE1E6),
+                          fillColor: const Color(0xFF051E3C),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFE2C475).withOpacity(0.2),
+                                        color: const Color(0xFFC29B38),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
-                                        court['room'],
+                                        court['floor'],
                                         style: GoogleFonts.tiroBangla(
-                                          color: const Color(0xFFE2C475),
-                                          fontSize: 10,
+                                          color: Colors.black,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ],
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      court['title'],
-                                      style: GoogleFonts.tiroBangla(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    if (court.containsKey('sub')) ...[
+                                    if (court.containsKey('room')) ...[
                                       const SizedBox(height: 6),
-                                      Text(
-                                        court['sub'],
-                                        style: GoogleFonts.tiroBangla(
-                                          fontSize: 12,
-                                          color: Colors.white70,
-                                          height: 1.4,
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF5CE1E6).withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        child: Text(
+                                          court['room'],
+                                          style: GoogleFonts.tiroBangla(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ],
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        court['title'],
+                                        style: GoogleFonts.tiroBangla(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      if (court.containsKey('sub')) ...[
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          court['sub'],
+                                          style: GoogleFonts.tiroBangla(
+                                            fontSize: 12,
+                                            color: Colors.white70,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -875,7 +1029,7 @@ class DistrictCourtMenuScreen extends StatelessWidget {
           'জেলা ও দায়রা জজ আদালত',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 18),
         ),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ListView(
@@ -912,23 +1066,20 @@ class DistrictCourtMenuScreen extends StatelessWidget {
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF0D1C2E),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF264C72)),
-      ),
+    return CyberBorderContainer(
+      borderColor: const Color(0xFF5CE1E6),
+      fillColor: const Color(0xFF051E3C),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: const Color(0xFFE2C475),
-            borderRadius: BorderRadius.circular(12),
+            color: const Color(0xFFC29B38),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: const Icon(
             Icons.stairs_rounded,
-            color: Colors.black,
+            color: Colors.white,
             size: 28,
           ),
         ),
@@ -1036,14 +1187,14 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
           'ঢাকা জেলা ও দায়রা জজ আদালত (নতুন ভবন)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            color: const Color(0xFF0D1C2E),
+            decoration: const BoxDecoration(color: Color(0xFF051E3C)),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1060,8 +1211,8 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFE2C475),
-                      backgroundColor: const Color(0xFF152A42),
+                      selectedColor: const Color(0xFFC29B38),
+                      backgroundColor: const Color(0xFF031327),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -1083,60 +1234,58 @@ class _DistrictCourtNewBuildingScreenState extends State<DistrictCourtNewBuildin
                       final court = filteredCourts[index];
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0D1C2E),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF264C72)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF152A42),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
-                                ),
-                                child: Text(
-                                  court['floor'],
-                                  style: GoogleFonts.tiroBangla(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                        child: CyberBorderContainer(
+                          borderColor: const Color(0xFF5CE1E6),
+                          fillColor: const Color(0xFF051E3C),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFC29B38),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    court['floor'],
+                                    style: GoogleFonts.tiroBangla(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      court['title'],
-                                      style: GoogleFonts.tiroBangla(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    if (court.containsKey('sub')) ...[
-                                      const SizedBox(height: 6),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                                       Text(
-                                        court['sub'],
+                                        court['title'],
                                         style: GoogleFonts.tiroBangla(
-                                          fontSize: 12,
-                                          color: Colors.white70,
-                                          height: 1.4,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
                                         ),
                                       ),
+                                      if (court.containsKey('sub')) ...[
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          court['sub'],
+                                          style: GoogleFonts.tiroBangla(
+                                            fontSize: 12,
+                                            color: Colors.white70,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ],
                                     ],
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -1226,14 +1375,14 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
           'জেলা ও দায়রা জজ আদালত (পুরাতন বিল্ডিং)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            color: const Color(0xFF0D1C2E),
+            decoration: const BoxDecoration(color: Color(0xFF051E3C)),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1250,8 +1399,8 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFE2C475),
-                      backgroundColor: const Color(0xFF152A42),
+                      selectedColor: const Color(0xFFC29B38),
+                      backgroundColor: const Color(0xFF031327),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -1273,60 +1422,58 @@ class _DistrictCourtOldBuildingScreenState extends State<DistrictCourtOldBuildin
                       final court = filteredCourts[index];
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0D1C2E),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF264C72)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF152A42),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
-                                ),
-                                child: Text(
-                                  court['floor'],
-                                  style: GoogleFonts.tiroBangla(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                        child: CyberBorderContainer(
+                          borderColor: const Color(0xFF5CE1E6),
+                          fillColor: const Color(0xFF051E3C),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFC29B38),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    court['floor'],
+                                    style: GoogleFonts.tiroBangla(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      court['title'],
-                                      style: GoogleFonts.tiroBangla(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    if (court.containsKey('sub')) ...[
-                                      const SizedBox(height: 6),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                                       Text(
-                                        court['sub'],
+                                        court['title'],
                                         style: GoogleFonts.tiroBangla(
-                                          fontSize: 12,
-                                          color: Colors.white70,
-                                          height: 1.4,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
                                         ),
                                       ),
+                                      if (court.containsKey('sub')) ...[
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          court['sub'],
+                                          style: GoogleFonts.tiroBangla(
+                                            fontSize: 12,
+                                            color: Colors.white70,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ],
                                     ],
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -1383,14 +1530,14 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
           'রেবতী ম্যানশন (জেলা ও দায়রা জজ আদালত)',
           style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16),
         ),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            color: const Color(0xFF0D1C2E),
+            decoration: const BoxDecoration(color: Color(0xFF051E3C)),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1407,8 +1554,8 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFE2C475),
-                      backgroundColor: const Color(0xFF152A42),
+                      selectedColor: const Color(0xFFC29B38),
+                      backgroundColor: const Color(0xFF031327),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -1430,60 +1577,58 @@ class _RebotiMansionScreenState extends State<RebotiMansionScreen> {
                       final court = filteredCourts[index];
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0D1C2E),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF264C72)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF152A42),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
-                                ),
-                                child: Text(
-                                  court['floor'],
-                                  style: GoogleFonts.tiroBangla(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                        child: CyberBorderContainer(
+                          borderColor: const Color(0xFF5CE1E6),
+                          fillColor: const Color(0xFF051E3C),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFC29B38),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    court['floor'],
+                                    style: GoogleFonts.tiroBangla(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      court['title'],
-                                      style: GoogleFonts.tiroBangla(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    if (court.containsKey('sub')) ...[
-                                      const SizedBox(height: 6),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
                                       Text(
-                                        court['sub'],
+                                        court['title'],
                                         style: GoogleFonts.tiroBangla(
-                                          fontSize: 12,
-                                          color: Colors.white70,
-                                          height: 1.4,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
                                         ),
                                       ),
+                                      if (court.containsKey('sub')) ...[
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          court['sub'],
+                                          style: GoogleFonts.tiroBangla(
+                                            fontSize: 12,
+                                            color: Colors.white70,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                      ],
                                     ],
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -1575,14 +1720,14 @@ class _MetropolitanSessionsCourtScreenState
           'মহানগর দায়রা জজ আদালত',
           style: GoogleFonts.tiroBangla(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            color: const Color(0xFF0D1C2E),
+            decoration: const BoxDecoration(color: Color(0xFF051E3C)),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -1599,8 +1744,8 @@ class _MetropolitanSessionsCourtScreenState
                         ),
                       ),
                       selected: isSelected,
-                      selectedColor: const Color(0xFFE2C475),
-                      backgroundColor: const Color(0xFF152A42),
+                      selectedColor: const Color(0xFFC29B38),
+                      backgroundColor: const Color(0xFF031327),
                       onSelected: (bool selected) {
                         setState(() {
                           selectedFloor = floor;
@@ -1622,70 +1767,59 @@ class _MetropolitanSessionsCourtScreenState
                       final court = filteredCourts[index];
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0D1C2E),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF264C72)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: court['floor'] == 'টিন শেড'
-                                      ? Colors.orange.shade800
-                                      : const Color(0xFF152A42),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: const Color(0xFF4EE8FF), width: 0.8),
-                                ),
-                                child: Text(
-                                  court['floor'],
-                                  style: GoogleFonts.tiroBangla(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                        child: CyberBorderContainer(
+                          borderColor: const Color(0xFF5CE1E6),
+                          fillColor: const Color(0xFF051E3C),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: court['floor'] == 'টিন শেড'
+                                        ? Colors.orange.shade800
+                                        : const Color(0xFFC29B38),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    court['floor'],
+                                    style: GoogleFonts.tiroBangla(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      court['title'],
-                                      style: GoogleFonts.tiroBangla(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    if (court.containsKey('sub')) ...[
-                                      const SizedBox(height: 6),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFE2C475).withOpacity(0.15),
-                                          borderRadius: BorderRadius.circular(6),
-                                          border: Border.all(color: const Color(0xFFE2C475), width: 0.5),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        court['title'],
+                                        style: GoogleFonts.tiroBangla(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
                                         ),
-                                        child: Text(
+                                      ),
+                                      if (court.containsKey('sub')) ...[
+                                        const SizedBox(height: 6),
+                                        Text(
                                           court['sub'],
                                           style: GoogleFonts.tiroBangla(
                                             fontSize: 12,
-                                            color: const Color(0xFFE2C475),
-                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white70,
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ],
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -1710,7 +1844,7 @@ class CourtDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(courtName, style: GoogleFonts.tiroBangla(color: Colors.white, fontSize: 16)),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
@@ -1718,7 +1852,7 @@ class CourtDetailsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.construction, size: 80, color: Color(0xFFE2C475)),
+            const Icon(Icons.construction, size: 80, color: Color(0xFFC29B38)),
             const SizedBox(height: 20),
             Text(
               courtName,
@@ -1730,17 +1864,16 @@ class CourtDetailsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF0D1C2E),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: const Color(0xFF264C72)),
-              ),
-              child: const Text(
-                'এই বিল্ডিংয়ের রুম এবং তলা সংক্রান্ত বিস্তারিত ডাটা শীঘ্রই যুক্ত করা হবে। আপনি আপনার কাছে থাকা তথ্য প্রদান করলে তা এখানে ডাইনামিকালি সাজিয়ে দেওয়া হবে।',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.white70, height: 1.5),
+            CyberBorderContainer(
+              borderColor: const Color(0xFF5CE1E6),
+              fillColor: const Color(0xFF051E3C),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'এই বিল্ডিংয়ের রুম এবং তলা সংক্রান্ত বিস্তারিত ডাটা শীঘ্রই যুক্ত করা হবে।',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14, color: Colors.white87, height: 1.5),
+                ),
               ),
             ),
           ],
@@ -1765,7 +1898,6 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
   bool _isLoading = false;
 
   static const String _apiKey = String.fromEnvironment('GEMINI_API_KEY');
-
   late final GenerativeModel _model;
 
   @override
@@ -1786,7 +1918,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
         _messages.add({"role": "user", "text": text});
         _messages.add({
           "role": "ai",
-          "text": "ত্রুটি ঘটেছে: Gemini API Key পাওয়া যায়নি। অনুগ্রহ করে GitHub Secrets-এ GEMINI_API_KEY সঠিকভাবে সেট করার পর বিল্ড দিন।"
+          "text": "ত্রুটি ঘটেছে: Gemini API Key পাওয়া যায়নি।"
         });
         _promptController.clear();
       });
@@ -1802,7 +1934,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
     try {
       final response = await _model.generateContent([
         Content.text(
-          'তুমি বিপ্লব আদালত (Biplob Adalat) অ্যাপের একজন পেশাদার বাংলা আইনি সহকারী। সংক্ষেপে ও নির্ভুলভাবে উত্তর দাও: $text',
+          'তুমি বিপ্লব আদালত (Biplob Adalat) অ্যাপের একজন পেশাদার বাংলা আইনি সহকারী। সংক্ষেপে উত্তর দাও: $text',
         )
       ]);
 
@@ -1814,10 +1946,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
       });
     } catch (e) {
       setState(() {
-        _messages.add({
-          "role": "ai",
-          "text": "ত্রুটি ঘটেছে: $e"
-        });
+        _messages.add({"role": "ai", "text": "ত্রুটি ঘটেছে: $e"});
       });
     } finally {
       setState(() {
@@ -1831,7 +1960,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Google Gemini আইনি সহকারী', style: GoogleFonts.tiroBangla(color: Colors.white)),
-        backgroundColor: const Color(0xFF071220),
+        backgroundColor: const Color(0xFF031327),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
@@ -1848,16 +1977,13 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
                     margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: isUser ? const Color(0xFF152A42) : const Color(0xFF0D1C2E),
+                      color: isUser ? const Color(0xFFC29B38) : const Color(0xFF051E3C),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isUser ? const Color(0xFF4EE8FF) : const Color(0xFF264C72),
-                      ),
                     ),
                     child: Text(
                       _messages[index]["text"]!,
                       style: TextStyle(
-                        color: isUser ? Colors.white : Colors.white70,
+                        color: isUser ? Colors.black : Colors.white,
                         fontSize: 14,
                       ),
                     ),
@@ -1869,11 +1995,11 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
           if (_isLoading)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: LinearProgressIndicator(color: Color(0xFFE2C475)),
+              child: LinearProgressIndicator(color: Color(0xFF5CE1E6)),
             ),
           Container(
             padding: const EdgeInsets.all(12),
-            color: const Color(0xFF0D1C2E),
+            color: const Color(0xFF051E3C),
             child: Row(
               children: [
                 Expanded(
@@ -1883,13 +2009,13 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
                     onSubmitted: (_) => _sendMessage(),
                     decoration: const InputDecoration(
                       hintText: 'আইন বা কোর্ট বিষয়ক যেকোনো প্রশ্ন লিখুন...',
-                      hintStyle: TextStyle(color: Colors.white38),
+                      hintStyle: TextStyle(color: Colors.white54),
                       border: InputBorder.none,
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send, color: Color(0xFFE2C475)),
+                  icon: const Icon(Icons.send, color: Color(0xFF5CE1E6)),
                   onPressed: _sendMessage,
                 ),
               ],
