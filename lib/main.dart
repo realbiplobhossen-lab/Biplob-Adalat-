@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -12,7 +13,7 @@ class BiplobAdalatApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Biplob Adalat',
+      title: 'Biplob Dhaka Court',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -25,7 +26,193 @@ class BiplobAdalatApp extends StatelessWidget {
         ),
         textTheme: GoogleFonts.tiroBanglaTextTheme(Theme.of(context).textTheme),
       ),
-      home: const MainHomeScreen(),
+      home: const SplashScreen(),
+    );
+  }
+}
+
+// ------------------- SPLASH SCREEN WITH 3D TICKER -------------------
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  late ScrollController _scrollController;
+  Timer? _timer;
+  Timer? _navigateTimer;
+
+  final String tickerText =
+      "This App is designed by Biplob Hossen for the people, by the people, to the people  @ Apprentice Lawyer, Dhaka Judge Court, Dhaka. WhatsApp: 01757700054          ";
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    // ব্রেকিং নিউজ স্ক্রোলিং অ্যানিমেশন
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startNewsTicker();
+    });
+
+    // ৩ সেকেন্ড পর হোমপেজে নেভিগেট করবে (প্রয়োজনে Duration বাড়িয়ে ৩ মিনিট করতে পারবেন: minutes: 3)
+    _navigateTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainHomeScreen()),
+        );
+      }
+    });
+  }
+
+  void _startNewsTicker() {
+    _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+      if (_scrollController.hasClients) {
+        double maxScroll = _scrollController.position.maxScrollExtent;
+        double currentScroll = _scrollController.offset;
+        if (currentScroll >= maxScroll) {
+          _scrollController.jumpTo(0);
+        } else {
+          _scrollController.animateTo(
+            currentScroll + 3.0,
+            duration: const Duration(milliseconds: 50),
+            curve: Curves.linear,
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _navigateTimer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF031327),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: CustomPaint(
+                painter: CircuitBackgroundPainter(),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // ৩ডি ফ্রেম সহ প্রোফাইল পিকচার
+                    Container(
+                      width: 170,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF5CE1E6), width: 2.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF5CE1E6).withOpacity(0.4),
+                            blurRadius: 20,
+                            spreadRadius: 3,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        image: const DecorationImage(
+                          // আপনার রুট ফোল্ডারে থাকা ছবিটির সঠিক প্যাথ দিন
+                          image: AssetImage('assets/images/profile.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 35),
+
+                    // টেলিভিশন ব্রেকিং নিউজ স্টাইলের ৩ডি ব্যানার ও টেক্সট স্ক্রোলার
+                    Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF8B0000), Color(0xFFD32F2F), Color(0xFF8B0000)],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFFFFD700), width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.redAccent.withOpacity(0.5),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          // ৩ডি ব্রেকিং ব্যাজ
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFFFD700),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(6),
+                                bottomLeft: Radius.circular(6),
+                              ),
+                            ),
+                            child: const Text(
+                              'BREAKING',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.black,
+                                fontSize: 13,
+                                letterSpacing: 1.1,
+                              ),
+                            ),
+                          ),
+                          // ৩ডি টেক্সট মার্কি / ব্রেকিং নিউজ টেক্সট
+                          Expanded(
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              scrollDirection: Axis.horizontal,
+                              physics: const NeverScrollableScrollPhysics(),
+                              child: Center(
+                                child: Text(
+                                  tickerText,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.5,
+                                    fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      Shadow(
+                                        offset: const Offset(1.5, 1.5),
+                                        blurRadius: 3.0,
+                                        color: Colors.black.withOpacity(0.8),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -49,7 +236,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Circuit board background graphics emulation
             Positioned.fill(
               child: CustomPaint(
                 painter: CircuitBackgroundPainter(),
@@ -60,21 +246,17 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  // Top Profile Section
                   _buildProfileHeader(),
-
                   const SizedBox(height: 15),
-
-                  // App Title "Biplob Adalat"
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(width: 40), // Spacer for center balance
+                      const SizedBox(width: 40),
                       Text(
-                        'Biplob Adalat',
+                        'Biplob Dhaka Court',
                         style: GoogleFonts.cinzel(
                           color: Colors.white,
-                          fontSize: 28,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.1,
                         ),
@@ -91,10 +273,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 15),
-
-                  // Search Bar
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Container(
@@ -106,33 +285,30 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                       child: TextField(
                         controller: _searchController,
                         style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'কোর্ট বা রুম নম্বর খুঁজুন...',
-                          hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
-                          prefixIcon: const Icon(Icons.search, color: Color(0xFFC29B38), size: 26),
+                          hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
+                          prefixIcon: Icon(Icons.search, color: Color(0xFFC29B38), size: 26),
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                          contentPadding: EdgeInsets.symmetric(vertical: 14),
                         ),
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 15),
-
-                  // Golden Subtitle Banner
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: CyberBorderContainer(
                       borderColor: const Color(0xFFC29B38),
                       fillColor: const Color(0xFF031327),
                       strokeWidth: 1.5,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                         child: Row(
                           children: [
-                            const Icon(Icons.gavel_rounded, color: Color(0xFFC29B38), size: 24),
-                            const SizedBox(width: 10),
-                            const Expanded(
+                            Icon(Icons.gavel_rounded, color: Color(0xFFC29B38), size: 24),
+                            SizedBox(width: 10),
+                            Expanded(
                               child: Text(
                                 'আইনজীবী ও বিচারপ্রার্থীদের জন্য দ্রুত কোর্ট ট্র্যাকিং সমাধান',
                                 style: TextStyle(
@@ -147,10 +323,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
-                  // 4 Main Category Cards
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
@@ -208,8 +381,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 ],
               ),
             ),
-
-            // Bottom Floating Gold "Need any Help" Button
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -257,7 +428,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     );
   }
 
-  // Profile Header Card Design
   Widget _buildProfileHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -270,7 +440,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              // Profile Photo frame
               Container(
                 width: 100,
                 height: 110,
@@ -278,16 +447,12 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                   border: Border.all(color: const Color(0xFF5CE1E6), width: 1.5),
                   borderRadius: BorderRadius.circular(4),
                   image: const DecorationImage(
-                    image: NetworkImage('https://i.ibb.co/6y4f3Z7/profile.png'), // Replace with image asset
+                    image: AssetImage('assets/images/profile.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
-                child: Container(
-                  color: Colors.blueGrey.withOpacity(0.2), // Fallback visual
-                ),
               ),
               const SizedBox(width: 12),
-              // Info Text
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,7 +492,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     );
   }
 
-  // Cyber styled Category Card Widget
   Widget _buildCategoryCard({
     required String title,
     required String subtitle,
@@ -481,33 +645,27 @@ class CircuitBackgroundPainter extends CustomPainter {
       ..color = const Color(0xFF5CE1E6).withOpacity(0.5)
       ..style = PaintingStyle.fill;
 
-    // Drawing circuit line decorations along edges
     final path = Path();
 
-    // Top left circuit
     path.moveTo(10, 80);
     path.lineTo(50, 80);
     path.lineTo(80, 110);
 
-    // Top right circuit
     path.moveTo(size.width - 10, 80);
     path.lineTo(size.width - 50, 80);
     path.lineTo(size.width - 80, 110);
 
-    // Left side circuit
     path.moveTo(0, 300);
     path.lineTo(30, 300);
     path.lineTo(50, 320);
     path.lineTo(50, 400);
 
-    // Right side circuit
     path.moveTo(size.width, 450);
     path.lineTo(size.width - 30, 450);
     path.lineTo(size.width - 50, 470);
 
     canvas.drawPath(path, paint);
 
-    // Circuit Dots
     canvas.drawCircle(const Offset(80, 110), 3, dotPaint);
     canvas.drawCircle(Offset(size.width - 80, 110), 3, dotPaint);
     canvas.drawCircle(const Offset(50, 400), 3, dotPaint);
@@ -1934,7 +2092,7 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
     try {
       final response = await _model.generateContent([
         Content.text(
-          'তুমি বিপ্লব আদালত (Biplob Adalat) অ্যাপের একজন পেশাদার বাংলা আইনি সহকারী। সংক্ষেপে উত্তর দাও: $text',
+          'তুমি বিপ্লব ঢাকা কোর্ট (Biplob Dhaka Court) অ্যাপের একজন পেশাদার বাংলা আইনি সহকারী। সংক্ষেপে উত্তর দাও: $text',
         )
       ]);
 
