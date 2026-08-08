@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart00:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -136,7 +136,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     const SizedBox(height: 35),
 
-                    // টেলিভিশন ব্রেকিং নিউজ স্টাইলের ৩ডি ব্যানার ও টেক্সট স্ক্রোলার
+                    // ২য় স্ক্রিনশট: টেলিভিশন ব্রেকিং নিউজ স্টাইলের ৩ডি ব্যানার ও টেক্সট স্ক্রোলার (ঠিক করা হয়েছে)
                     Container(
                       height: 55,
                       decoration: BoxDecoration(
@@ -157,7 +157,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                       child: Row(
                         children: [
-                          // ৩ডি ব্রেকিং ব্যাজ (এখানে ফিক্স করা হয়েছে)
+                          // ৩ডি ব্রেকিং ব্যাজ
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: const BoxDecoration(
@@ -427,6 +427,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     );
   }
 
+  // ১ম স্ক্রিনশট: হোমপেজের প্রোফাইল সেকশন (ঠিক করা হয়েছে)
   Widget _buildProfileHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -464,6 +465,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                         fontSize: 18,
                       ),
                     ),
+                    const SizedBox(height: 4),
                     const Text(
                       'LL.B (Hon\'s), LL.M\nApprentice Lawyer,\nDhaka Judge Court.',
                       style: TextStyle(
@@ -472,7 +474,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                         height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     const Text(
                       'Email: biplobdiu67@gmail.com\nWhatsApp: 01757700054',
                       style: TextStyle(
@@ -2127,8 +2129,29 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
-               return SizedBox(); // অথবা আপনার কাঙ্ক্ষিত উইজেট
-              }
+                final message = _messages[index];
+                final isUser = message["role"] == "user";
+                return Align(
+                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isUser ? const Color(0xFFC29B38) : const Color(0xFF051E3C),
+                      borderRadius: BorderRadius.circular(10),
+                      border: isUser ? null : Border.all(color: const Color(0xFF5CE1E6), width: 1),
+                    ),
+                    child: Text(
+                      message["text"] ?? "",
+                      style: TextStyle(
+                        color: isUser ? Colors.black : Colors.white,
+                        fontSize: 14,
+                        fontWeight: isUser ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           if (_isLoading)
