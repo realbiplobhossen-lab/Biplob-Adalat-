@@ -2126,9 +2126,9 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
-              itemBuilder: (index) {
-                return const SizedBox();
-              },
+              itemBuilder: (context, index) {
+               return SizedBox(); // অথবা আপনার কাঙ্ক্ষিত উইজেট
+              }
             ),
           ),
           if (_isLoading)
