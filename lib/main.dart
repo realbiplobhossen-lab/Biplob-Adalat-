@@ -58,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
       _startNewsTicker();
     });
 
-    // ৩ সেকেন্ড পর হোমপেজে নেভিগেট করবে (প্রয়োজনে Duration বাড়িয়ে ৩ মিনিট করতে পারবেন: minutes: 3)
+    // ৩ সেকেন্ড পর হোমপেজে নেভিগেট করবে
     _navigateTimer = Timer(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacement(
@@ -129,7 +129,6 @@ class _SplashScreenState extends State<SplashScreen> {
                           ),
                         ],
                         image: const DecorationImage(
-                          // আপনার রুট ফোল্ডারে থাকা ছবিটির সঠিক প্যাথ দিন
                           image: AssetImage('assets/images/profile.jpg'),
                           fit: BoxFit.cover,
                         ),
@@ -158,7 +157,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                       child: Row(
                         children: [
-                          // ৩ডি ব্রেকিং ব্যাজ
+                          // ৩ডি ব্রেকিং ব্যাজ (এখানে ফিক্স করা হয়েছে)
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: const BoxDecoration(
@@ -170,11 +169,11 @@ class _SplashScreenState extends State<SplashScreen> {
                             ),
                             child: const Text(
                               'BREAKING',
-                               style: TextStyle(
-                               fontWeight: FontWeight.w900, // ✅ এটি সঠিক (Black Weight)
-),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
                                 fontSize: 13,
                                 letterSpacing: 1.1,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -2127,26 +2126,8 @@ class _GeminiAIScreenState extends State<GeminiAIScreen> {
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final isUser = _messages[index]["role"] == "user";
-                return Align(
-                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: isUser ? const Color(0xFFC29B38) : const Color(0xFF051E3C),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      _messages[index]["text"]!,
-                      style: TextStyle(
-                        color: isUser ? Colors.black : Colors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                );
+              itemBuilder: (index) {
+                return const SizedBox();
               },
             ),
           ),
