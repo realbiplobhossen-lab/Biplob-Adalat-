@@ -39,17 +39,17 @@ jobs:
     - name: Install Dependencies
       run: flutter pub get
 
-    - name: Setup App Icon and App Name
+    -     - name: Setup App Icon and App Name
       run: |
         # ১. অ্যাপ আইকন জেনারেটরের প্যাকেজ যোগ
         flutter pub add flutter_launcher_icons --dev
         
-        # ২. pubspec.yaml-এ আইকন কনফিগারেশন লেখা
+        # ২. pubspec.yaml-এ আইকন কনফিগারেশন লেখা (ios: false করা হয়েছে)
         cat <<EOF >> pubspec.yaml
 
         flutter_launcher_icons:
           android: true
-          ios: true
+          ios: false
           image_path: "assets/images/app_icon.png"
         EOF
 
@@ -58,6 +58,7 @@ jobs:
 
         # ৪. অ্যান্ড্রয়েড ফোনে ইনস্টল নাম Biplob Dhaka Court করা
         sed -i 's/android:label=".*"/android:label="Biplob Dhaka Court"/' android/app/src/main/AndroidManifest.xml
+        
 
     - name: Build APK with Secret Key
       env:
